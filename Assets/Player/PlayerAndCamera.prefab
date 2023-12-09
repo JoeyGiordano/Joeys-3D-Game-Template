@@ -5315,7 +5315,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5067598594153547390}
   m_Layer: 0
-  m_Name: PC
+  m_Name: PlayerAndCamera
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
