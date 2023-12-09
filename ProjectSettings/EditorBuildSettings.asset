@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/QuicksilverScenes/MainMenu.unity
+    path: Assets/Scenes/QuicksilverScenes/MainMenu/MainMenu.unity
     guid: 92538ccd3d5c6c946ba6ef5ce5ab6186
   - enabled: 1
-    path: Assets/Scenes/QuicksilverScenes/Tutorial.unity
+    path: Assets/Scenes/QuicksilverScenes/Tutorial/Tutorial.unity
     guid: d88bac2008d64c3449a593e9753cc7cd
   - enabled: 1
     path: Assets/Scenes/QuicksilverScenes/Level_02.unity
