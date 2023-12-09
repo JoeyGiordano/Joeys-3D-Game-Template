@@ -4,44 +4,53 @@ using UnityEngine;
 
 public class Jumping : MovementState
 {
-    public override MoveState getMyState()
-    {
-        //just return the corresponding enum
-        return MoveState.jumping;
-    }
-
     public override bool EnterCondition()
     {
         //if jump key pressed return true, else return false
-        return true;
+        return false;
     }
 
     public override bool ExitCondition()
     {
-        //if ground hit return true, else return false
-        return true;
+        //if grounded return true, else return false
+        return false;
+    }
+
+    public override MoveState getMyState()
+    {
+        return MoveState.jumping;
     }
 
     public override void OnEnter(MoveState previousState)
     {
         //apply an upward force
-        //if previous == wallRun, apply additional sideways force
+
+        //if previousState == wallRun, apply additional sideways force make the character jump away from the wall
     }
 
     public override MoveState OnExit()
     {
-        //return MoveState.walking because that is the state that will be entered after landing (assumed, if wrong it will just be overriden by something else)
-        return MoveState.walking;
-    }
-
-    public override void WhileActive()
-    {
-        //if jump key released apply downward force
-        //(idk if thats the way you want it to work but)
+        //MoveState.free is the state that will be entered after landing
+        return MoveState.free;
     }
 
     public override void OnOverriden()
     {
         //reset gravity to normal, etc
+    }
+
+    public override void OnReset()
+    {
+        //reset any accumulated values etc
+    }
+
+    public override void OnStartup()
+    {
+        //instantiate anything needed
+    }
+
+    public override void WhileActive()
+    {
+        //if jump key released apply downward force
     }
 }
