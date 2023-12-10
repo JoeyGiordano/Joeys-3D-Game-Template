@@ -54,9 +54,11 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
     private void CollectReferences()
     {
-        //*TODO*TODO* get and store your new MovementState script
-        free = GetComponent<Free>();
-        jumping = GetComponent<Jumping>();
+        //*TODO*TODO* check if your new MovementState script is attached to the gameobject, if it is get and store it
+        if (GetComponent<Free>())
+            free = GetComponent<Free>();
+        if (GetComponent<Jumping>())
+            free = GetComponent<Jumping>();
 
     }
 
