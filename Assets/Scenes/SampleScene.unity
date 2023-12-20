@@ -24449,7 +24449,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh29192
+  m_Name: pb_Mesh36038
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -37201,9 +37201,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientation: {fileID: 1013479839029955199}
   moveForce: 15
-  backForce: 10
-  strafeForce: 8
-  drag: 0.15
+  backForce: 8
+  strafeForce: 10
+  groundDrag: 0.15
+  airDrag: 0.001
   dragType: 1
   maxSpeed: 10
 --- !u!4 &6699734581689105369

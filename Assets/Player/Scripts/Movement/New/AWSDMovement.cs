@@ -11,10 +11,11 @@ public class AWSDMovement : MonoBehaviour
     private bool active = true;
 
     //Movement
-    public float moveForce = 10;
-    public float backForce = 7;
-    public float strafeForce = 6;
-    public float drag = 0.15f;
+    public float moveForce = 15;
+    public float backForce = 8;
+    public float strafeForce = 10;
+    public float groundDrag = 0.15f;
+    public float airDrag = 0.001f;
     public DragType dragType = DragType.GROUND;
     public float maxSpeed = 10;
 
@@ -69,13 +70,13 @@ public class AWSDMovement : MonoBehaviour
 
         //apply drag
         if (dragType == DragType.GROUND)
-            moveRes.ApplyGroundDrag(drag);
+            moveRes.ApplyGroundDrag(groundDrag);
         else if (dragType == DragType.AIR)
-            moveRes.ApplyAirDrag(drag);
+            moveRes.ApplyAirDrag(airDrag);
         else if (dragType == DragType.GROUND_AND_AIR)
         {
-            moveRes.ApplyGroundDrag(drag);
-            moveRes.ApplyAirDrag(drag);
+            moveRes.ApplyGroundDrag(groundDrag);
+            moveRes.ApplyAirDrag(airDrag);
         }
 
     }
