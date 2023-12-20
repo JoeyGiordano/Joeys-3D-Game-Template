@@ -18,20 +18,36 @@ using UnityEngine;
 /// </summary>
 public abstract class MovementState : MonoBehaviour
 {
+    //player stuffs
+    protected GameObject player;
+    protected Rigidbody rb;
+
     //the PlayerMovementStateMachine that is using this instance of MovementState
     PlayerMovementStateMachine stateMachine;
+    //the MovementResources associated with stateMachine
+    protected MovementResources MoveRes;
 
-    //associates this MovementState script with a MoveState enum value
+    //associates this MovementState script with a MoveState enum value (different for each child)
+    [HideInInspector]
     public MoveState myState;
     //whether or not WhileActive() should run during Update()
+    [HideInInspector]
     public bool active;
 
     //called by a PlayerMovementStateMachine to give this script necessary references and instantiate things (I don't like using Unity's Start() method, bc less control)
-    public void Startup(PlayerMovementStateMachine stateMachine)
+    public void Startup(PlayerMovementStateMachine stateMachine, MovementResources moveRes)
     {
+        //set references
         this.stateMachine = stateMachine;
+        this.MoveRes = moveRes;
+        //get the player object stuff (MovementState child scripts should be attached to a player)
+        player = gameObject;
+        rb = GetComponent<Rigidbody>();
+        //set myState, the enum associated with this script (as specified in child)
         myState = getMyState();
+        //deactivate
         active = false;
+        //call startup method for child
         OnStartup();
     }
 
@@ -80,7 +96,7 @@ public abstract class MovementState : MonoBehaviour
     }
 
     /// <summary>
-    /// A getter to associate MovementState scripts with MoveState enum values.
+    /// A getter to associate MovementState child scripts with MoveState enum values.
     /// </summary>
     /// <returns>The MoveState enum value associated with this movement state.</returns>
     public abstract MoveState getMyState();

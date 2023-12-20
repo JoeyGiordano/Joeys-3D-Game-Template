@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class Free : MovementState
 {
-    public override bool EnterCondition()
-    {
-        return false;   //no way to manually enter this state
-    }
+    //Note to people that are copying this to make a new movement state:
+    //You do not need to get the player object, a reference is already stored in the parent (type Player)
+    //A reference to the RigidBody is also stored in the parent (type rb)
+    //A reference to MovementResources is also already stored in the parent (type MoveRes)
 
-    public override bool ExitCondition()
+    public override void OnStartup()
     {
-        return false;   //the state continues until overriden
+        //do nothing
     }
 
     public override MoveState getMyState()
@@ -19,14 +19,30 @@ public class Free : MovementState
         return MoveState.free;
     }
 
+    public override bool EnterCondition()
+    {
+        return false;   //no way to manually enter this state
+    }
+
     public override void OnEnter(MoveState previousState)
     {
         //do nothing
     }
 
+    public override void WhileActive()
+    {
+        //enable awsd movement
+    }
+
+    public override bool ExitCondition()
+    {
+        return false;   //the state continues until overriden
+    }
+
     public override MoveState OnExit()
     {
-        return MoveState.jumping;   //doesn't actually do anything because ExitCondition() is always false
+        //this method will never actually be called because ExitCondition always returns false
+        return MoveState.free;
     }
 
     public override void OnOverriden()
@@ -39,13 +55,4 @@ public class Free : MovementState
         //do nothing
     }
 
-    public override void OnStartup()
-    {
-        //do nothing
-    }
-
-    public override void WhileActive()
-    {
-        //do nothing
-    }
 }
