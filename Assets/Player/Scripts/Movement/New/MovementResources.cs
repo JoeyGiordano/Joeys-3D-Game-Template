@@ -1,6 +1,5 @@
 using UnityEngine;
 
-
 /// <summary>
 /// 
 /// this class...
@@ -14,14 +13,20 @@ public class MovementResources : MonoBehaviour
     public Transform topOfPlayer, bottomOfPlayer, centerOfPlayer;
     AWSDMovement awsd;
     Rigidbody rb;
+    CapsuleCollider coll;
 
-    //grounding
+    public Vector3 vel;
+    public float speed;
+
+    //ground related
     [HideInInspector]
     public bool grounded = false;
+    [HideInInspector]
+    public RaycastHit groundHit;    //what the grounding raycast is hitting, only meaningful when grounded
 
     //gravity
     public Vector3 normalGravity = new Vector3(0, -9.81f, 0);
-    [SerializeField] private Vector3 gravity;
+    public Vector3 gravity;
 
     //layermasks
     public LayerMask groundLayer;
@@ -30,12 +35,15 @@ public class MovementResources : MonoBehaviour
     {
         awsd = GetComponent<AWSDMovement>();
         rb = GetComponent<Rigidbody>();
+        coll = GetComponentInChildren<CapsuleCollider>();
         gravity = normalGravity;
     }
 
     void Update()
     {
         GroundCheck();
+        vel = rb.velocity;
+        speed = vel.magnitude;
     }
 
     private void FixedUpdate()
@@ -45,12 +53,14 @@ public class MovementResources : MonoBehaviour
 
     void GroundCheck()
     {
-        grounded = Physics.Raycast(bottomOfPlayer.position, Vector3.down, 0.2f, groundLayer);
+        //stores the resulting RaycastHit in groundHit
+        Vector3 castFrom = bottomOfPlayer.position + new Vector3(0,coll.radius,0);
+        grounded = Physics.SphereCast(castFrom, 0.98f * coll.radius, Vector3.down, out groundHit, 0.1f, groundLayer);
     }
 
     void ApplyGravity()
     {
-        rb.AddForce(gravity);
+        rb.AddForce(gravity, ForceMode.Force);
     }
 
     //Gravity
@@ -66,11 +76,11 @@ public class MovementResources : MonoBehaviour
     //AWSD Movement
     public void ActivateAWSD()
     {
-        awsd.activate();
+        awsd.Activate();
     }
     public void DeactivateAWSD()
     {
-        awsd.deactivate();
+        awsd.Deactivate();
     }
 
     //Get velocity components
@@ -115,5 +125,27 @@ public class MovementResources : MonoBehaviour
             rb.velocity -= drag * Mathf.Pow(rb.velocity.sqrMagnitude, (pow - 1f) / 2f) * XZvelocity();
         else
             rb.velocity -= drag * Mathf.Pow(rb.velocity.sqrMagnitude, (pow - 1f) / 2f) * rb.velocity;
+    }
+
+    //Ground Results
+    public Vector3 ProjectOnGround(Vector3 v)
+    {
+        return Vector3.ProjectOnPlane(v, groundHit.normal);
+    }
+    public Vector3 GroundNormal()
+    {
+        return groundHit.normal;
+    }
+    public float GroundSlopeDeg()
+    {
+        return Vector3.Angle(groundHit.normal, Vector3.up);
+    }
+    public float GroundSlopeRad()
+    {
+        return Mathf.Deg2Rad * Vector3.Angle(groundHit.normal, Vector3.up);
+    }
+    public GameObject GroundHitObj()
+    {
+        return groundHit.collider.gameObject;
     }
 }

@@ -27,6 +27,7 @@ public class Jump : MovementState
 
     public override void OnEnter(MoveState previousState)
     {
+        transform.position += 0.11f * Vector3.up;
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         rb.AddForce(new Vector3(0,jumpForce,0), ForceMode.Impulse);
         
