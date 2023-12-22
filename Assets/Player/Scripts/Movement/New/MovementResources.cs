@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 /// <summary>
@@ -15,9 +16,6 @@ public class MovementResources : MonoBehaviour
     Rigidbody rb;
     CapsuleCollider coll;
 
-    public Vector3 vel;
-    public float speed;
-
     //ground related
     [HideInInspector]
     public bool grounded = false;
@@ -25,46 +23,56 @@ public class MovementResources : MonoBehaviour
     public RaycastHit groundHit;    //what the grounding raycast is hitting, only meaningful when grounded
 
     //gravity
-    public Vector3 normalGravity = new Vector3(0, -9.81f, 0);
-    public Vector3 gravity;
+    private float normalGravity;
+    public float gravity;
 
     //layermasks
     public LayerMask groundLayer;
+
+    //UI
+    public TextMeshProUGUI text;
 
     void Start()
     {
         awsd = GetComponent<AWSDMovement>();
         rb = GetComponent<Rigidbody>();
         coll = GetComponentInChildren<CapsuleCollider>();
-        gravity = normalGravity;
+        normalGravity = gravity;
     }
 
     void Update()
     {
         GroundCheck();
-        vel = rb.velocity;
-        speed = vel.magnitude;
+        UI();
     }
 
     private void FixedUpdate()
     {
         ApplyGravity();
+
+        //noise kill
+        KillVelocity(0.001f);
     }
 
-    void GroundCheck()
+    private void UI()
+    {
+        text.text = ((int)(rb.velocity.magnitude*1000)/1000).ToString();
+    }
+
+    private void GroundCheck()
     {
         //stores the resulting RaycastHit in groundHit
         Vector3 castFrom = bottomOfPlayer.position + new Vector3(0,coll.radius,0);
         grounded = Physics.SphereCast(castFrom, 0.98f * coll.radius, Vector3.down, out groundHit, 0.1f, groundLayer);
     }
 
-    void ApplyGravity()
+    private void ApplyGravity()
     {
-        rb.AddForce(gravity, ForceMode.Force);
+        rb.AddForce(gravity * Vector3.down, ForceMode.Force);
     }
 
     //Gravity
-    public void SetGravity(Vector3 gravity)
+    public void SetGravity(float gravity)
     {
         this.gravity = gravity;
     }
@@ -82,6 +90,10 @@ public class MovementResources : MonoBehaviour
     {
         awsd.Deactivate();
     }
+    public AWSDMovement GetAWSD()
+    {
+        return awsd;
+    }
 
     //Get velocity components
     public Vector3 XZvelocity()
@@ -94,20 +106,38 @@ public class MovementResources : MonoBehaviour
     }
 
     //Kill Velocity
-    public void KillNearZeroVelocity(float minSpeed)
+    public void KillVelocity(float minSpeed)
     {
         if (rb.velocity.magnitude < minSpeed)
             rb.velocity = Vector3.zero;
     }
-    public void KillNearZeroXZvelocity(float minSpeed)
+    public void KillXZvelocity(float minSpeed)
     {
         if (XZvelocity().magnitude < minSpeed)
             rb.velocity = Yvelocity();
     }
-    public void KillNearZeroYvelocity(float minSpeed)
+    public void KillYvelocity(float minSpeed)
     {
         if (rb.velocity.y < minSpeed)
             rb.velocity = XZvelocity();
+    }
+
+    //Cap Velocity
+    public void CapVelocity(float maxSpeed)
+    {
+        if (rb.velocity.magnitude > maxSpeed)
+            rb.velocity = rb.velocity.normalized * maxSpeed;
+    }
+    public void CapXZVelocity(float maxSpeed)
+    {
+        Vector3 xz = XZvelocity();
+        if (xz.magnitude > maxSpeed)
+            rb.velocity = Yvelocity() + xz.normalized * maxSpeed;
+    }
+    public void CapYVelocity(float maxSpeed)
+    {
+        if (rb.velocity.y > maxSpeed)
+            rb.velocity = XZvelocity() + maxSpeed * Vector3.up;
     }
 
     //Drag
@@ -132,15 +162,19 @@ public class MovementResources : MonoBehaviour
     {
         return Vector3.ProjectOnPlane(v, groundHit.normal);
     }
+    public Vector3 ProjectOnFlat(Vector3 v)
+    {
+        return Vector3.ProjectOnPlane(v, Vector3.up);
+    }
     public Vector3 GroundNormal()
     {
         return groundHit.normal;
     }
-    public float GroundSlopeDeg()
+    public float GroundAngleDeg()
     {
         return Vector3.Angle(groundHit.normal, Vector3.up);
     }
-    public float GroundSlopeRad()
+    public float GroundAngleRad()
     {
         return Mathf.Deg2Rad * Vector3.Angle(groundHit.normal, Vector3.up);
     }

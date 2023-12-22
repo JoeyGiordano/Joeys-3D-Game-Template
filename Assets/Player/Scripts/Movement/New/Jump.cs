@@ -27,10 +27,9 @@ public class Jump : MovementState
 
     public override void OnEnter(MoveState previousState)
     {
-        transform.position += 0.11f * Vector3.up;
+        MoveRes.GetAWSD().AllowDeground();
         rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
         rb.AddForce(new Vector3(0,jumpForce,0), ForceMode.Impulse);
-        
         //example of using previousState: if previousState == wallRun, apply additional sideways force make the character jump away from the wall
     }
 
@@ -51,12 +50,14 @@ public class Jump : MovementState
     public override MoveState OnExit()
     {
         //if you land on the ground transition to free
+        MoveRes.GetAWSD().DisallowDeground();
         return MoveState.free;
     }
 
     public override void OnOverriden()
     {
         //do anything needed to set things back to normal
+        MoveRes.GetAWSD().DisallowDeground();
     }
 
     public override void OnReset()
