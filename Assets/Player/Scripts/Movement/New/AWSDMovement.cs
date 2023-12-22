@@ -9,7 +9,7 @@ public class AWSDMovement : MonoBehaviour
 
     //settings
     private bool active = true;
-    private bool allowDeground = false; //TODO
+    private bool allowDeground = false;
 
     [Header("Move Forces")]
     public float moveForce = 15;
@@ -24,10 +24,12 @@ public class AWSDMovement : MonoBehaviour
 
     [Header("Slope Handling")]
     public float maxSlopeAngle = 45;    //if a slope is steeper than this, you cannot use awsd movement to climb it
-    public float groundingForce = 200;   //TODO also check the speed on slopes
+    public float groundingForce = 200;  //max force used for grounding the player
 
     //Input
     Vector2 input;
+    CharacterController cc;
+    float num;
 
     //Save starting values
     float[] savedValues;
@@ -37,6 +39,7 @@ public class AWSDMovement : MonoBehaviour
     {
         moveRes = GetComponent<MovementResources>();
         rb = GetComponent<Rigidbody>();
+        cc = GetComponent<CharacterController>();
         rb.freezeRotation = true;
         SaveStartingValues();
     }
