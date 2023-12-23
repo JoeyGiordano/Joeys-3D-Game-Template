@@ -21,6 +21,8 @@ public class MovementResources : MonoBehaviour
     public bool grounded = false;
     [HideInInspector]
     public RaycastHit groundHit;    //what the grounding raycast is hitting, only meaningful when grounded
+    public float maxSlopeAngleConsideredGround = 50f;
+
 
     //gravity
     private float normalGravity;
@@ -64,6 +66,7 @@ public class MovementResources : MonoBehaviour
         //stores the resulting RaycastHit in groundHit
         Vector3 castFrom = bottomOfPlayer.position + new Vector3(0,coll.radius,0);
         grounded = Physics.SphereCast(castFrom, 0.98f * coll.radius, Vector3.down, out groundHit, 0.1f, groundLayer);
+        grounded = grounded && GroundAngleDeg() < maxSlopeAngleConsideredGround;
     }
 
     private void ApplyGravity()

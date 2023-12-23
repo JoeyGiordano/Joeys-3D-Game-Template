@@ -28,8 +28,6 @@ public class AWSDMovement : MonoBehaviour
 
     //Input
     Vector2 input;
-    CharacterController cc;
-    float num;
 
     //Save starting values
     float[] savedValues;
@@ -39,7 +37,6 @@ public class AWSDMovement : MonoBehaviour
     {
         moveRes = GetComponent<MovementResources>();
         rb = GetComponent<Rigidbody>();
-        cc = GetComponent<CharacterController>();
         rb.freezeRotation = true;
         SaveStartingValues();
     }
@@ -83,8 +80,9 @@ public class AWSDMovement : MonoBehaviour
         Vector3 moveForceVector = forward + backward + strafe;
 
         //Slope handling
-
-        moveForceVector = moveRes.ProjectOnGround(moveForceVector);
+        
+        if (moveRes.grounded) //grounded does not consider slopes more than a certain steepness ground
+            moveForceVector = moveRes.ProjectOnGround(moveForceVector);
         //only allow movement away from slope if slope to steep
         if (moveRes.GroundAngleDeg() > maxSlopeAngle)
         {
