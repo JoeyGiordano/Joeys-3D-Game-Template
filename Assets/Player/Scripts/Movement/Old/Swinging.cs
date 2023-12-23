@@ -18,7 +18,7 @@ public class Swinging : MonoBehaviour
     public LineRenderer lr;
     public Transform gunTip, cam, player;
     public LayerMask whatIsGrappleable;
-    public PlayerCam pc;
+    public PlayerCam1st pc;
     private PlayerMovement pm;
 
     private void Start()

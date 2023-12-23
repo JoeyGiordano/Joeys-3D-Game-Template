@@ -43,13 +43,13 @@ public class WallRunning : MonoBehaviour
     public Transform orientation;
     private Rigidbody rb;
     private PlayerMovement pm;
-    private PlayerCam cam;
+    private PlayerCam1st cam;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         pm = GetComponent<PlayerMovement>();
-        cam = Camera.main.GetComponent<PlayerCam>();
+        cam = Camera.main.GetComponent<PlayerCam1st>();
 
         wallRunTimer = maxWallRunTime;
         exitWallTimer = exitWallTime;

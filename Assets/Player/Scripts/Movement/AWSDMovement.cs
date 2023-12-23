@@ -3,7 +3,6 @@ using UnityEngine;
 public class AWSDMovement : MonoBehaviour
 {
     //References
-    public Transform orientation;
     MovementResources moveRes;
     Rigidbody rb;
 
@@ -72,9 +71,9 @@ public class AWSDMovement : MonoBehaviour
         //normalize input (make it not faster to go diagonal)
         Vector2 combined = input.normalized;
         //reseparate the forces and apply multipliers
-        Vector3 forward = moveForce * orientation.forward * Mathf.Max(combined.y, 0);
-        Vector3 backward = backForce * orientation.forward * Mathf.Min(combined.y, 0);
-        Vector3 strafe = strafeForce * orientation.right * combined.x;
+        Vector3 forward = moveForce * moveRes.orientation.forward * Mathf.Max(combined.y, 0);
+        Vector3 backward = backForce * moveRes.orientation.forward * Mathf.Min(combined.y, 0);
+        Vector3 strafe = strafeForce * moveRes.orientation.right * combined.x;
         //recombine the forces to get the move force vector
         Vector3 moveForceVector = forward + backward + strafe;
 

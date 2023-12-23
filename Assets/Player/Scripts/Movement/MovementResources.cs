@@ -17,6 +17,7 @@ public class MovementResources : MonoBehaviour
     AWSDMovement awsd;
 
     [Header("Locations")]
+    public Transform orientation;
     public Transform topOfPlayer;
     public Transform bottomOfPlayer;
     public Transform centerOfPlayer;
