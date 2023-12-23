@@ -23,7 +23,6 @@ public class AWSDMovement : MonoBehaviour
     public DragType dragType = DragType.GROUND;
 
     [Header("Slope Handling")]
-    public float maxSlopeAngle = 45;    //if a slope is steeper than this, you cannot use awsd movement to climb it
     public float groundingForce = 200;  //max force used for grounding the player
 
     //Input
@@ -84,7 +83,7 @@ public class AWSDMovement : MonoBehaviour
         if (moveRes.grounded) //grounded does not consider slopes more than a certain steepness ground
             moveForceVector = moveRes.ProjectOnGround(moveForceVector);
         //only allow movement away from slope if slope to steep
-        if (moveRes.GroundAngleDeg() > maxSlopeAngle)
+        if (moveRes.GroundAngleDeg() > moveRes.maxSlopeAngleConsideredGround)
         {
             Vector3 slopeFacing = moveRes.ProjectOnFlat(moveRes.GroundNormal()).normalized;
             Vector3 moveXZ = moveRes.ProjectOnFlat(moveForceVector).normalized;
@@ -152,7 +151,7 @@ public class AWSDMovement : MonoBehaviour
 
     public void SaveStartingValues()
     {
-        savedValues = new float[8];
+        savedValues = new float[7];
 
         //Movement
         savedValues[0] = moveForce;
@@ -166,8 +165,7 @@ public class AWSDMovement : MonoBehaviour
         savedDragType = dragType;
 
         //Slope
-        savedValues[6] = maxSlopeAngle;
-        savedValues[7] = groundingForce;
+        savedValues[6] = groundingForce;
     }
     public void Reset()
     {
@@ -186,8 +184,7 @@ public class AWSDMovement : MonoBehaviour
         dragType = savedDragType;
 
         //Slope
-        maxSlopeAngle = savedValues[6];
-        groundingForce = savedValues[7];
+        groundingForce = savedValues[6];
     }
 
     public enum DragType

@@ -10,28 +10,28 @@ using UnityEngine;
 /// </summary>
 public class MovementResources : MonoBehaviour
 {
-    //player stuffs
-    public Transform topOfPlayer, bottomOfPlayer, centerOfPlayer;
-    AWSDMovement awsd;
+    //references
     Rigidbody rb;
     CapsuleCollider coll;
+    Gravity grav;
+    AWSDMovement awsd;
 
-    //ground related
+    [Header("Locations")]
+    public Transform topOfPlayer;
+    public Transform bottomOfPlayer;
+    public Transform centerOfPlayer;
+
+    [Header("Grounding")]
+    public float maxSlopeAngleConsideredGround = 50f;
     [HideInInspector]
     public bool grounded = false;
     [HideInInspector]
     public RaycastHit groundHit;    //what the grounding raycast is hitting, only meaningful when grounded
-    public float maxSlopeAngleConsideredGround = 50f;
 
-
-    //gravity
-    private float normalGravity;
-    public float gravity;
-
-    //layermasks
+    [Header("Layer Masks")]
     public LayerMask groundLayer;
 
-    //UI
+    [Header("Other")]
     public TextMeshProUGUI text;
 
     void Start()
@@ -39,7 +39,7 @@ public class MovementResources : MonoBehaviour
         awsd = GetComponent<AWSDMovement>();
         rb = GetComponent<Rigidbody>();
         coll = GetComponentInChildren<CapsuleCollider>();
-        normalGravity = gravity;
+        grav = GetComponent<Gravity>();
     }
 
     void Update()
@@ -50,8 +50,6 @@ public class MovementResources : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ApplyGravity();
-
         //noise kill
         KillVelocity(0.001f);
     }
@@ -69,19 +67,10 @@ public class MovementResources : MonoBehaviour
         grounded = grounded && GroundAngleDeg() < maxSlopeAngleConsideredGround;
     }
 
-    private void ApplyGravity()
-    {
-        rb.AddForce(gravity * Vector3.down, ForceMode.Force);
-    }
-
     //Gravity
-    public void SetGravity(float gravity)
+    public Gravity getGravity()
     {
-        this.gravity = gravity;
-    }
-    public void ResetGravity()
-    {
-        gravity = normalGravity;
+        return grav;
     }
 
     //AWSD Movement
