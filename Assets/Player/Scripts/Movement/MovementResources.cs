@@ -38,7 +38,7 @@ public class MovementResources : MonoBehaviour
     {
         awsd = GetComponent<AWSDMovement>();
         rb = GetComponent<Rigidbody>();
-        coll = GetComponentInChildren<CapsuleCollider>();
+        coll = GetComponent<CapsuleCollider>();
         grav = GetComponent<Gravity>();
     }
 
