@@ -28,8 +28,6 @@ public class AWSDMovement : MonoBehaviour
 
     //Input
     Vector2 input;
-    CharacterController cc;
-    float num;
 
     //Save starting values
     float[] savedValues;
@@ -39,8 +37,6 @@ public class AWSDMovement : MonoBehaviour
     {
         moveRes = GetComponent<MovementResources>();
         rb = GetComponent<Rigidbody>();
-        cc = GetComponent<CharacterController>();
-        rb.freezeRotation = true;
         SaveStartingValues();
     }
 
@@ -56,7 +52,7 @@ public class AWSDMovement : MonoBehaviour
         if (!active) return;
 
         MovePlayer();
-        ApplyGroundingForce();
+        //ApplyGroundingForce();
         ApplyDrag();
 
     }
@@ -83,8 +79,9 @@ public class AWSDMovement : MonoBehaviour
         Vector3 moveForceVector = forward + backward + strafe;
 
         //Slope handling
-
+        /*
         moveForceVector = moveRes.ProjectOnGround(moveForceVector);
+        
         //only allow movement away from slope if slope to steep
         if (moveRes.GroundAngleDeg() > maxSlopeAngle)
         {
@@ -98,12 +95,12 @@ public class AWSDMovement : MonoBehaviour
                 return;
             }
         }
-
+        */
         //Apply movement force
 
         //you can only move if xz speed is less than max speed, works as long as drag > 0
         float xzSpeed = moveRes.XZvelocity().magnitude;
-        if (xzSpeed <= cutoffSpeed)
+        //if (xzSpeed <= cutoffSpeed)
             rb.AddForce(moveForceVector * 10f, ForceMode.Force);
     }
 
@@ -134,7 +131,6 @@ public class AWSDMovement : MonoBehaviour
     public void Activate()
     {
         active = true;
-        rb.freezeRotation = true;
     }
     public void Deactivate()
     {

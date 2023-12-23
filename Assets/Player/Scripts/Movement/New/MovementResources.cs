@@ -14,7 +14,7 @@ public class MovementResources : MonoBehaviour
     public Transform topOfPlayer, bottomOfPlayer, centerOfPlayer;
     AWSDMovement awsd;
     Rigidbody rb;
-    CapsuleCollider coll;
+    SphereCollider coll;
 
     //ground related
     [HideInInspector]
@@ -36,7 +36,7 @@ public class MovementResources : MonoBehaviour
     {
         awsd = GetComponent<AWSDMovement>();
         rb = GetComponent<Rigidbody>();
-        coll = GetComponentInChildren<CapsuleCollider>();
+        coll = GetComponentInChildren<SphereCollider>();
         normalGravity = gravity;
     }
 
@@ -56,7 +56,7 @@ public class MovementResources : MonoBehaviour
 
     private void UI()
     {
-        text.text = ((int)(rb.velocity.magnitude*1000)/1000).ToString();
+        text.text = ((float)((int)(rb.velocity.magnitude*1000))/1000).ToString();
     }
 
     private void GroundCheck()
