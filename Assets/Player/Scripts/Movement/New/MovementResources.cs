@@ -145,6 +145,10 @@ public class MovementResources : MonoBehaviour
     {
         rb.velocity -= drag * XZvelocity();
     }
+    public void ApplyXYZGroundDrag(float drag)
+    {
+        rb.velocity -= drag * rb.velocity;
+    }
     public void ApplyAirDrag(float drag)
     {
         rb.velocity -= drag * rb.velocity.magnitude * rb.velocity;

@@ -121,7 +121,10 @@ public class AWSDMovement : MonoBehaviour
     private void ApplyDrag()
     {
         if (dragType == DragType.GROUND)
-            moveRes.ApplyGroundDrag(groundDrag);
+            if (moveRes.grounded)
+                moveRes.ApplyXYZGroundDrag(groundDrag);
+            else
+                moveRes.ApplyGroundDrag(groundDrag);
         else if (dragType == DragType.AIR)
             moveRes.ApplyAirDrag(airDrag);
         else if (dragType == DragType.GROUND_AND_AIR)
