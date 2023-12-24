@@ -5,18 +5,16 @@ using UnityEngine;
 public class Gravity : MonoBehaviour
 {
     //References
-    MovementResources moveRes;
     Rigidbody rb;
 
     //static worldGravity variable?
 
     //Values
-    private float normalGravity;
-    public float gravity;
+    private float normalGravity = 37;
+    public float gravity = 37;
 
     private void Start()
     {
-        moveRes = GetComponent<MovementResources>();
         rb = GetComponent<Rigidbody>();
     }
 

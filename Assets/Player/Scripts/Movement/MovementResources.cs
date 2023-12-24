@@ -23,9 +23,9 @@ public class MovementResources : MonoBehaviour
     public Transform centerOfPlayer;
 
     [Header("Grounding")]
-    public float maxSlopeAngleConsideredGround = 50f;
-    [HideInInspector]
-    public bool grounded = false;
+    public bool grounded = false;       //true when the spherecast hits the ground, and the slope is less than maxSlopeAngleConsideredGround 
+    public bool onTooSteepSlope = false;   //true when the spherecast hits the ground, but the slope is more than maxSlopeAngleConsideredGround
+    public float steepSlopeAngle = 45;
     [HideInInspector]
     public RaycastHit groundHit;    //what the grounding raycast is hitting, only meaningful when grounded
 
@@ -64,8 +64,16 @@ public class MovementResources : MonoBehaviour
     {
         //stores the resulting RaycastHit in groundHit
         Vector3 castFrom = bottomOfPlayer.position + new Vector3(0,coll.radius,0);
+        //grounded is true if Spherecast hits
         grounded = Physics.SphereCast(castFrom, 0.98f * coll.radius, Vector3.down, out groundHit, 0.1f, groundLayer);
-        grounded = grounded && GroundAngleDeg() < maxSlopeAngleConsideredGround;
+        //if the slope is too steep
+        if (grounded && GroundAngleDeg() > steepSlopeAngle)
+        {
+            //turn off grounded
+            grounded = false;
+            //turn on onTooSteepSlope
+            onTooSteepSlope = true;
+        } else onTooSteepSlope = false;
     }
 
     //Gravity
@@ -134,13 +142,17 @@ public class MovementResources : MonoBehaviour
     }
 
     //Drag
-    public void ApplyGroundDrag(float drag)
+    public void ApplyXZGroundDrag(float drag)
     {
         rb.velocity -= drag * XZvelocity();
     }
     public void ApplyXYZGroundDrag(float drag)
     {
         rb.velocity -= drag * rb.velocity;
+    }
+    public void ApplyYGroundDrag(float drag)
+    {
+        rb.velocity -= drag * Yvelocity();
     }
     public void ApplyAirDrag(float drag)
     {
@@ -155,7 +167,7 @@ public class MovementResources : MonoBehaviour
     }
 
     //Ground Results
-    public Vector3 ProjectOnGround(Vector3 v)
+    public Vector3 ProjectOnGroundHit(Vector3 v)
     {
         return Vector3.ProjectOnPlane(v, groundHit.normal);
     }

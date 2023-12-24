@@ -11,18 +11,21 @@ public class AWSDMovement : MonoBehaviour
     private bool allowDeground = false;
 
     [Header("Move Forces")]
-    public float moveForce = 15;
-    public float backForce = 8;
-    public float strafeForce = 10;
+    public float moveForce = 40;
+    public float backForce = 24;
+    public float strafeForce = 15;
+    public float airMultiplier = 1;  //multiplies the movement force vector when in the air
     public float cutoffSpeed = 10;   //speed at which awsd force no longer applied, ~120% of desired max speed
 
     [Header("Drag")]
-    public float groundDrag = 0.15f;
+    public float groundDrag = 0.3f;
     public float airDrag = 0.001f;
     public DragType dragType = DragType.GROUND;
 
     [Header("Slope Handling")]
     public float groundingForce = 200;  //max force used for grounding the player
+    public float tooSteepSlopeForce = 100;  //max force used for pushing the player down a too steep slope
+    public float steepSlopeUpwardYDragMultiplier = 0.45f;
 
     //Input
     Vector2 input;
@@ -77,20 +80,34 @@ public class AWSDMovement : MonoBehaviour
         //recombine the forces to get the move force vector
         Vector3 moveForceVector = forward + backward + strafe;
 
+        //Air Multiplier
+        if (!moveRes.grounded)
+            moveForceVector *= airMultiplier;
+
         //Slope handling
-        
-        if (moveRes.grounded) //grounded does not consider slopes more than a certain steepness ground
-            moveForceVector = moveRes.ProjectOnGround(moveForceVector);
-        //only allow movement away from slope if slope to steep
-        if (moveRes.GroundAngleDeg() > moveRes.maxSlopeAngleConsideredGround)
+
+        //if grounded align the moveVector with the slope plane 
+        if (moveRes.grounded)
+            moveForceVector = moveRes.ProjectOnGroundHit(moveForceVector);
+        //if slope to steep only allow movement away from slope
+        if (moveRes.onTooSteepSlope)
         {
             Vector3 slopeFacing = moveRes.ProjectOnFlat(moveRes.GroundNormal()).normalized;
-            Vector3 moveXZ = moveRes.ProjectOnFlat(moveForceVector).normalized;
-            //if the movement vector points towards the slope don't allow the movement, ie don't allow to climb slope
-            if (Vector3.Dot(slopeFacing, moveXZ) < 0.1f)
+            Vector3 slopeDown = moveRes.ProjectOnGroundHit(slopeFacing).normalized;
+            Vector3 moveXZ = moveForceVector.normalized;
+
+            //as the rb slides down a slope
+            //the slope applies a kinda upwards force when the rb gets pushed by it
+            //this cancels that out
+            //the cos makes the force right for different slope angles
+            //the
+            if (moveForceVector == Vector3.zero)
+                rb.AddForce(slopeDown * tooSteepSlopeForce * 2f * Mathf.Cos(moveRes.GroundAngleRad()), ForceMode.Force);
+
+            //if the movement vector points towards the slope return before movement force is applied
+            //prevents normal climbing
+            if (Vector3.Dot(slopeFacing, moveXZ) < 0f)
             {
-                //prevent from sliding up slope
-                rb.AddForce(Vector3.down * 80f, ForceMode.Force);
                 return;
             }
         }
@@ -117,17 +134,27 @@ public class AWSDMovement : MonoBehaviour
     private void ApplyDrag()
     {
         if (dragType == DragType.GROUND)
-            if (moveRes.grounded)
-                moveRes.ApplyXYZGroundDrag(groundDrag);
-            else
-                moveRes.ApplyGroundDrag(groundDrag);
+            ApplyGroundDrag();
         else if (dragType == DragType.AIR)
             moveRes.ApplyAirDrag(airDrag);
         else if (dragType == DragType.GROUND_AND_AIR)
         {
-            moveRes.ApplyGroundDrag(groundDrag);
+            ApplyGroundDrag();
             moveRes.ApplyAirDrag(airDrag);
         }
+    }
+    private void ApplyGroundDrag()
+    {
+        if (moveRes.grounded)
+            moveRes.ApplyXYZGroundDrag(groundDrag);
+        else if (moveRes.onTooSteepSlope)
+        {
+            moveRes.ApplyXZGroundDrag(groundDrag);
+            if (rb.velocity.y >= 0)
+                moveRes.ApplyYGroundDrag(groundDrag * steepSlopeUpwardYDragMultiplier);
+        }
+        else
+            moveRes.ApplyXZGroundDrag(groundDrag);
     }
 
     public void Activate()
@@ -150,21 +177,24 @@ public class AWSDMovement : MonoBehaviour
 
     public void SaveStartingValues()
     {
-        savedValues = new float[7];
+        savedValues = new float[10];
 
         //Movement
         savedValues[0] = moveForce;
         savedValues[1] = backForce;
         savedValues[2] = strafeForce;
-        savedValues[3] = cutoffSpeed;
+        savedValues[3] = airMultiplier;
+        savedValues[4] = cutoffSpeed;
 
         //Drag
-        savedValues[4] = groundDrag;
-        savedValues[5] = airDrag;
+        savedValues[5] = groundDrag;
+        savedValues[6] = airDrag;
         savedDragType = dragType;
 
         //Slope
-        savedValues[6] = groundingForce;
+        savedValues[7] = groundingForce;
+        savedValues[8] = tooSteepSlopeForce;
+        savedValues[9] = steepSlopeUpwardYDragMultiplier;
     }
     public void Reset()
     {
@@ -175,15 +205,18 @@ public class AWSDMovement : MonoBehaviour
         moveForce = savedValues[0];
         backForce = savedValues[1];
         strafeForce = savedValues[2];
-        cutoffSpeed = savedValues[3];
+        airMultiplier = savedValues[3];
+        cutoffSpeed = savedValues[4];
 
         //Drag
-        groundDrag = savedValues[4];
-        airDrag = savedValues[5];
+        groundDrag = savedValues[5];
+        airDrag = savedValues[6];
         dragType = savedDragType;
 
         //Slope
-        groundingForce = savedValues[6];
+        groundingForce = savedValues[7];
+        tooSteepSlopeForce = savedValues[8];
+        steepSlopeUpwardYDragMultiplier = savedValues[9];
     }
 
     public enum DragType

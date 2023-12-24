@@ -324,8 +324,9 @@ MonoBehaviour:
   topOfPlayer: {fileID: 6792573896543303738}
   bottomOfPlayer: {fileID: 4726405537273560541}
   centerOfPlayer: {fileID: 96222889729541959}
-  maxSlopeAngleConsideredGround: 45
   grounded: 0
+  onTooSteepSlope: 0
+  steepSlopeAngle: 45
   groundLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -373,13 +374,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveForce: 40
-  backForce: 8
-  strafeForce: 10
+  backForce: 24
+  strafeForce: 15
+  airMultiplier: 1
   cutoffSpeed: 13
   groundDrag: 0.3
   airDrag: 0.001
   dragType: 1
   groundingForce: 200
+  tooSteepSlopeForce: 100
+  steepSlopeUpwardYDragMultiplier: 0.45
 --- !u!114 &9073471938198502667
 MonoBehaviour:
   m_ObjectHideFlags: 0
