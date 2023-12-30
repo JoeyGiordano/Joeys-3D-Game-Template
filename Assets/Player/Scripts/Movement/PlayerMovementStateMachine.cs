@@ -10,27 +10,21 @@ using UnityEngine;
 ///  - provides a way to get the MovementState child script that corresponds to a certain MoveState enum value (MoveStateToScript())
 ///  - is HEAVILY commented so that you can read it and easily figure out exactly what's going on
 ///
-/// How it works if you want to use it:
-///  Really easy!
-///  1. Attach this script, MovementResources, and all desired MovementState child scripts to the player object (Free, Jumping, etc)
-///  2. If you want to change a certain movement type, you only need to edit the associated script
-///  3. Done!
-///  4. If you want to add a new movement state, follow the directions below
-///
 /// 
-/// TO ADD A NEW MOVEMENT STATE:       (steps 1-5 can be skipped if you copy a preexisting MovementState child script)
+/// TO ADD A NEW MOVEMENT STATE:       (steps 1-5 can be skipped if you copy code from a preexisting MovementState child script)
 /// 
 ///  1. Create a new class named [movement state]ing (Jumping for jump, Sliding for slide, etc)
 ///  2. Make the new class not a MonoBehaviour (by deleting the ': MonoBehaviour') - (note: it will be a MonoBehaviour again when it is a child of MovementState)
 ///  3. Delete the Start() and Update() methods
 ///  4. Make the class a child of the abstract class MovementState (add ': MovementState' next to class name)
 ///  5. There will be an error on the class name, the compiler requires the new class to inherit some methods
-///      i.   hover over the error
+///      i.   hover your mouse over the error
 ///      ii.  click show potential fixes
 ///      iii. click implement abstract class
-///      iv.  the inherited methods will be automatically created (don't fill them in yet)
+///      iv.  the inherited methods will be created automatically (don't fill them in yet)
 ///  6. Find all places in this script with a *TODO*TODO* and do what it says (there are 6)
-///  7. The new state has been added to the state machine, you can now implement your new state
+///  7. Add the script to the Player gameobject
+///  8. The new state has been added to the state machine, you can now implement your new state
 ///      i.   delete the throw statement in every auto-generated method from step 5
 ///      ii.  implement the methods, see the MovementState script for what they do or look at other states as examples
 ///
@@ -47,6 +41,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
     //*TODO*TODO* create a variable to store your new MovementState child script
     MovementState free;
     MovementState jump;
+    MovementState crouch;
 
     void Start()
     {
@@ -66,6 +61,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
             free = GetComponent<Free>();
         if (GetComponent<Jump>())
             jump = GetComponent<Jump>();
+        if (GetComponent<Crouch>())
+            crouch = GetComponent<Crouch>();
 
     }
 
@@ -77,6 +74,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
         //*TODO*TODO* call the Startup method on your new MovementState child script, pass this and moveRes
         free.Startup(this, moveRes);
         jump.Startup(this, moveRes);
+        crouch.Startup(this, moveRes);
 
     }
 
@@ -91,6 +89,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
         //*TODO*TODO* call the Reset method on your new MovementState child script
         free.Reset();
         jump.Reset();
+        crouch.Reset();
     }
 
     /// <summary>
@@ -135,6 +134,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
                 return free;
             case MovementState.MoveState.jumping:
                 return jump;
+            case MovementState.MoveState.crouching:
+                return crouch;
             default:
                 Debug.LogError("PlayerMovementStateMachine: MovementState " + state + " has no associated script");
                 return null;    //if the code gets here, a MovementScript-MoveState pair is not added

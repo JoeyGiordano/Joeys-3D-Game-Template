@@ -23,7 +23,7 @@ public abstract class MovementState : MonoBehaviour
     protected Rigidbody rb;
 
     //the PlayerMovementStateMachine that is using this instance of MovementState
-    PlayerMovementStateMachine stateMachine;
+    protected PlayerMovementStateMachine stateMachine;
     //the MovementResources associated with stateMachine
     protected MovementResources MoveRes;
 
@@ -61,7 +61,7 @@ public abstract class MovementState : MonoBehaviour
     void Update()
     {
         //if exit condition is met...
-        if (ExitCondition())
+        if (active && ExitCondition())
         {
             //run exit code (as specified in child) and obtain the next state (as specified by child, returned from OnExit())
             MoveState nextState = OnExit();
@@ -79,7 +79,7 @@ public abstract class MovementState : MonoBehaviour
         }
 
         //if enter condition is met...
-        if (EnterCondition())
+        if (!active && EnterCondition())
         {
             //store the active state
             MoveState previousState = stateMachine.state;
@@ -89,6 +89,8 @@ public abstract class MovementState : MonoBehaviour
             stateMachine.state = myState;
             //activate this script, WhileActive() will now run every update
             active = true;
+            //turn on/off awsd movement
+            if (UseAWSD()) MoveRes.ActivateAWSD(); else MoveRes.DeactivateAWSD();
             //run the on enter code (as specified in child), passing the previous state as an argument (to be used in child)
             OnEnter(previousState);
         }
@@ -112,6 +114,12 @@ public abstract class MovementState : MonoBehaviour
     /// </summary>
     /// <returns></returns>
     public abstract bool ExitCondition();
+
+    /// <summary>
+    /// Whether or not to use AWSD movement during this state.
+    /// </summary>
+    /// <returns></returns>
+    public abstract bool UseAWSD();
 
     /// <summary>
     /// Called when a state is entered, either when the enter condition is met or after the exit of some other state.
@@ -153,6 +161,7 @@ public abstract class MovementState : MonoBehaviour
         //*TODO*TODO* add a new state to this enum for the new movement script
         //other things you need to do to add a new movement state are listed in the readme in PlayerMovementStateMachine 
         free,
-        jumping
+        jumping,
+        crouching,
     }
 }

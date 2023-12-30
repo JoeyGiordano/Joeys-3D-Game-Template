@@ -8,6 +8,7 @@ public class Free : MovementState
     //You do not need to get the player object, a reference is already stored in the parent (type Player)
     //A reference to the RigidBody is also stored in the parent (type rb)
     //A reference to MovementResources is also already stored in the parent (type MoveRes)
+    //A reference to PlayerMovementStateMachine (use to access current state) is also already stored in the parent (type stateMachine)
 
     public override void OnStartup()
     {
@@ -24,6 +25,11 @@ public class Free : MovementState
         return false;   //no way to manually enter this state
     }
 
+    public override bool UseAWSD()
+    {
+        return true;    //allow awsd movement
+    }
+
     public override void OnEnter(MoveState previousState)
     {
         //do nothing
@@ -31,7 +37,7 @@ public class Free : MovementState
 
     public override void WhileActive()
     {
-        //enable awsd movement
+        //do nothing
     }
 
     public override bool ExitCondition()

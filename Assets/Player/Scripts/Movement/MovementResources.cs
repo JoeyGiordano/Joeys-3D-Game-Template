@@ -83,6 +83,49 @@ public class MovementResources : MonoBehaviour
         return grav;
     }
 
+    //Scale
+    public void ScalePlayerAndModelXYZ(float scaleMultiplier)
+    {
+        if (scaleMultiplier <= 0) { Debug.Log("Illegal scale multiplier"); return; }
+        transform.parent.transform.localScale *= scaleMultiplier;
+    }
+    public void ScalePlayerY(float scaleMultiplier)
+    {
+        if (scaleMultiplier <= 0) { Debug.Log("Illegal scale multiplier"); return; }
+        if (coll.radius * 2 > coll.height * scaleMultiplier) { Debug.Log("Scale multiplier floored"); scaleMultiplier = coll.height / (2 * coll.radius); }
+        float oldHeight = coll.height;
+        //scale capsule collider height
+        coll.height *= scaleMultiplier;
+        //move capsule collider center
+        float heightChange = coll.height - oldHeight;
+        coll.center += heightChange/2 * Vector3.up;
+        //scale orientation
+        orientation.localScale = new Vector3(orientation.localScale.x, orientation.localScale.y * scaleMultiplier, orientation.localScale.z);
+    }
+    public void ScalePlayerXZ(float scaleMultiplier)
+    {
+        if (scaleMultiplier <= 0) { Debug.Log("Illegal scale multiplier"); return; }
+        if (coll.radius * scaleMultiplier > coll.height/2) { Debug.Log("Scale multiplier truncated"); scaleMultiplier = coll.height / (2 * coll.radius); }
+        //change the collider radius
+        coll.radius *= scaleMultiplier;
+        //scale orientation
+        orientation.localScale = new Vector3(orientation.localScale.x * scaleMultiplier, orientation.localScale.y, orientation.localScale.z * scaleMultiplier);
+        //adjust feet
+        //get the feet
+        GameObject feet = GetAWSD().feet;
+        bool feetWereActive = feet.activeInHierarchy;
+        feet.SetActive(true);
+        SphereCollider feetColl = feet.GetComponent<SphereCollider>();
+        float oldR = feetColl.radius;
+        //scale the feet
+        feetColl.radius *= scaleMultiplier;
+        //move the feet
+        float rChange = feetColl.radius - oldR;
+        feetColl.center += rChange * Vector3.up;
+        //deactivate the feet if necessary
+        feet.SetActive(feetWereActive);
+    }
+
     //AWSD Movement
     public void ActivateAWSD()
     {

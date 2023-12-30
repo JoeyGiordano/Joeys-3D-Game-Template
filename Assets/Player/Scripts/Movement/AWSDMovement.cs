@@ -27,6 +27,7 @@ public class AWSDMovement : MonoBehaviour
     public float groundDrag = 0.3f;     //player feet will always cause some drag when on surfaces
     public float airDrag = 0.001f;
     public DragType dragType = DragType.GROUND;
+    public GameObject feet;
 
     [Header("Slope Handling")]
     public float groundingForce = 200;  //max force used for grounding the player
@@ -196,14 +197,21 @@ public class AWSDMovement : MonoBehaviour
 
     //Resource Methods
 
+    public bool isActive()
+    {
+        return active;
+    }
     public void Activate()
     {
         active = true;
         rb.freezeRotation = true;
+        DisallowDeground();
+        feet.SetActive(true);
     }
     public void Deactivate()
     {
         active = false;
+        feet.SetActive(false);
     }
     public void AllowDeground()
     {
@@ -240,7 +248,7 @@ public class AWSDMovement : MonoBehaviour
         savedValues[11] = tooSteepSlopeForce;
         savedValues[12] = steepSlopeUpwardYDragMultiplier;
     }
-    public void Reset()
+    public void ResetValues()
     {
         active = true;
         allowDeground = false;
