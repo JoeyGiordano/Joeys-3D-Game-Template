@@ -12,6 +12,8 @@ public class PlayerCam : MonoBehaviour
 
     [SerializeField]
     private bool startFirstPerson;
+    [HideInInspector]
+    public bool firstPerson;
 
     private void Start()
     {
@@ -46,10 +48,12 @@ public class PlayerCam : MonoBehaviour
     {
         firstPersonCam.SetActive(true);
         thirdPersonCam.SetActive(false);
+        firstPerson = true;
     }
     public void CutToThirdPersonCam()
     {
         thirdPersonCam.SetActive(true);
         firstPersonCam.SetActive(false);
+        firstPerson = false;
     }
 }

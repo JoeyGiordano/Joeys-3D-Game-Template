@@ -584,7 +584,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6461943581996083859}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Orientation
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -619,7 +619,7 @@ GameObject:
   - component: {fileID: 4466265657308087826}
   - component: {fileID: 6853201788905274578}
   - component: {fileID: 4829072597000590096}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerCapsule
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -748,7 +748,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2233134856954191144}
-  m_LocalRotation: {x: 0.13870122, y: -1e-45, z: -0, w: 0.99033433}
+  m_LocalRotation: {x: 0.1387012, y: -0, z: -0, w: 0.99033433}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -948,7 +948,7 @@ GameObject:
   - component: {fileID: 3517471366838291065}
   - component: {fileID: 2327904064021446493}
   - component: {fileID: 9073471938198502667}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1135,7 +1135,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8930926553974522922}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CameraTargets
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1169,7 +1169,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6175467539904385457}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CameraPosFirstPerson
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1405,7 +1405,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3514043453178040580}
-  m_LocalRotation: {x: 0.11559233, y: 0.00000003418209, z: -0.000000003977852, w: 0.9932968}
+  m_LocalRotation: {x: 0.11559233, y: 0.000000034182086, z: -0.0000000039778514, w: 0.9932968}
   m_LocalPosition: {x: 0, y: 2, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1551,7 +1551,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 96222889729541959}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CenterOfPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1582,7 +1582,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4349934836754251088}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GunTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1869,7 +1869,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5550058071107941238}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GrappleGun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2028,7 +2028,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3598323286483235221}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CameraTargetThirdPerson
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2186,7 +2186,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 563999885685767572}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: CameraTargetCombat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2298,7 +2298,7 @@ GameObject:
   - component: {fileID: 8785146507265135487}
   - component: {fileID: 2274511470812004946}
   - component: {fileID: 2190608744960488724}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Goggles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2312,8 +2312,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5334096680207754317}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0.4}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0.39999962}
   m_LocalScale: {x: 0.7, y: 0.3, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2586,7 +2586,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4141886770793269085}
   - component: {fileID: 3114017186852480337}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Feet(forPhysics)
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -2653,7 +2653,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5688750273609335841}
-  m_LocalRotation: {x: 0.11559233, y: 0.000000017091047, z: -0.0000000019889261, w: 0.99329674}
+  m_LocalRotation: {x: 0.11559233, y: -0.000000017091043, z: 0.0000000019889257, w: 0.99329674}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3508,7 +3508,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6537075260124349923}
-  m_LocalRotation: {x: 0.09252102, y: -0.000000017659858, z: 0.0000000016409465, w: 0.99571073}
+  m_LocalRotation: {x: 0.09252102, y: -0.00000001765986, z: 0.0000000016409466, w: 0.99571073}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3937,7 +3937,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2849666892977613574}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlayerModel
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -3971,7 +3971,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6792573896543303738}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: TopOfPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4019,7 +4019,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7387451112851476602}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.55, y: -0.34, z: 1.23}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4085,7 +4085,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 184934325653514787}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Locations
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4159,6 +4159,7 @@ MonoBehaviour:
   firstPersonCamScript: {fileID: 0}
   thirdPersonCamScript: {fileID: 0}
   startFirstPerson: 1
+  firstPerson: 0
 --- !u!1 &8511778029742971609
 GameObject:
   m_ObjectHideFlags: 0
@@ -4168,7 +4169,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4726405537273560541}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BottomOfPlayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4251,6 +4252,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientation: {fileID: 6461943581996083859}
   playerModel: {fileID: 2849666892977613574}
+  playerHead: {fileID: 0}
   xSensitivity: 4
   ySensitivity: 4
   fov: 70

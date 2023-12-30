@@ -9,6 +9,7 @@ public class FirstPersonPlayerCam : MonoBehaviour
     [Header("References")]
     public Transform orientation;
     public Transform playerModel;
+    public Transform playerHead;
 
     [Header("Cam Settings")]
     public float xSensitivity;
@@ -18,8 +19,6 @@ public class FirstPersonPlayerCam : MonoBehaviour
 
     float xRotation;
     float yRotation;
-
-    float rotation = 0;
 
     private void Start()
     {
@@ -56,4 +55,5 @@ public class FirstPersonPlayerCam : MonoBehaviour
     {
         camObj.transform.DOLocalRotate(rotation, transitionTime);
     }
+
 }
