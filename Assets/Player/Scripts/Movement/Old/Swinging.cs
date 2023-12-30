@@ -18,7 +18,7 @@ public class Swinging : MonoBehaviour
     public LineRenderer lr;
     public Transform gunTip, cam, player;
     public LayerMask whatIsGrappleable;
-    public PlayerCam1st pc;
+  //  public PlayerCam1st pc;
     private PlayerMovement pm;
 
     private void Start()
@@ -68,13 +68,13 @@ public class Swinging : MonoBehaviour
             lr.positionCount = 2;
             currentGrapplePosition = gunTip.position;
 
-            pc.DoFOV(95f);
+ //           pc.DoFOV(95f);
         }
     }
 
     private void StopSwing()
     {
-        pc.DoFOV(pc.fov);
+//        pc.DoFOV(pc.fov);
         lr.positionCount = 0;
         pm.state = PlayerMovement.MovementState.air;
         Destroy(joint);

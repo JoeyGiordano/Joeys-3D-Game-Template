@@ -34,6 +34,7 @@ public class MovementResources : MonoBehaviour
 
     [Header("Other")]
     public TextMeshProUGUI text;
+    public Vector3 movementInputDirection;     //the current direction of the player movement input, set by AWSDMovement in fixed update, can be set by other movementstate scripts (normalize!), used by cameras
 
     void Start()
     {

@@ -43,13 +43,13 @@ public class WallRunning : MonoBehaviour
     public Transform orientation;
     private Rigidbody rb;
     private PlayerMovement pm;
-    private PlayerCam1st cam;
+ //   private PlayerCam1st cam;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         pm = GetComponent<PlayerMovement>();
-        cam = Camera.main.GetComponent<PlayerCam1st>();
+ //       cam = Camera.main.GetComponent<PlayerCam1st>();
 
         wallRunTimer = maxWallRunTime;
         exitWallTimer = exitWallTime;
@@ -165,9 +165,9 @@ public class WallRunning : MonoBehaviour
         wallRunTimer = maxWallRunTime;
 
         //Apply Camera Effects
-        cam.DoFOV(90f);
-        if (wallLeft) cam.DoTilt(-5f);
-        if (wallRight) cam.DoTilt(5f);
+  //      cam.DoFOV(90f);
+    //    if (wallLeft) cam.DoTilt(-5f);
+      //  if (wallRight) cam.DoTilt(5f);
     }
 
     private void WallRunMovement()
@@ -201,8 +201,8 @@ public class WallRunning : MonoBehaviour
         wallRunTimer = maxWallRunTime;
 
         //Reset Camera Effects
-        cam.DoFOV(cam.fov);
-        cam.DoTilt(0);
+//        cam.DoFOV(cam.fov);
+  //      cam.DoTilt(0);
     }
 
     private void WallJump()

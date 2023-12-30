@@ -80,6 +80,9 @@ public class AWSDMovement : MonoBehaviour
         //recombine the forces to get the move force vector
         Vector3 moveForceVector = forward + backward + strafe;
 
+        //Update movementInputDirection in MovementResources
+        moveRes.movementInputDirection = moveForceVector.normalized;
+
         //Air Multiplier
         if (!moveRes.grounded)
             moveForceVector *= airMultiplier;
