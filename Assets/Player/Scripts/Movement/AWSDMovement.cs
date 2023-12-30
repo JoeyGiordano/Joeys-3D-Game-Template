@@ -14,11 +14,17 @@ public class AWSDMovement : MonoBehaviour
     public float moveForce = 40;
     public float backForce = 24;
     public float strafeForce = 15;
+    public float moveMultiplier = 1;     //multiplies the movement force vector always
     public float airMultiplier = 1;  //multiplies the movement force vector when in the air
     public float cutoffSpeed = 10;   //speed at which awsd force no longer applied, ~120% of desired max speed
 
+    [Header("Sprint")]
+    public KeyCode sprintKey = KeyCode.LeftShift;
+    public float sprintMultiplier = 1.3f;   //multiplies the movement force vector when sprint key is held
+    public float sprintCutoffSpeed = 14;    //the cutoff speed while sprint key is held
+
     [Header("Drag")]
-    public float groundDrag = 0.3f;
+    public float groundDrag = 0.3f;     //player feet will always cause some drag when on surfaces
     public float airDrag = 0.001f;
     public DragType dragType = DragType.GROUND;
 
@@ -29,8 +35,9 @@ public class AWSDMovement : MonoBehaviour
 
     //Input
     Vector2 input;
+    bool sprinting;
 
-    //Save starting values
+    //Save starting values, (for easy reset)
     float[] savedValues;
     DragType savedDragType;
 
@@ -61,15 +68,30 @@ public class AWSDMovement : MonoBehaviour
 
     private void GetInput()
     {
+        sprinting = Input.GetKey(sprintKey);
+
         input = Vector2.zero;
         input += Vector2.right * Input.GetAxisRaw("Horizontal");
         input += Vector2.up * Input.GetAxisRaw("Vertical");
     }
 
+    //MovePlayer Methods
+
     private void MovePlayer()
     {
+        //Calculate move force from input
+        Vector3 moveForceVector = CalculateMoveForce();
+        //Update movementInputDirection in MovementResources
+        moveRes.movementInputDirection = moveForceVector.normalized;
+        //Apply slope adjustments
+        moveForceVector = ApplySlopeHandling(moveForceVector);
+        //Add force to the player rb
+        ApplyMovementForce(moveForceVector);
+    }
 
-        //Calculate movement direction (you can't just add then normalize bc different directions apply different forces)
+    private Vector3 CalculateMoveForce()
+    {
+        //(you can't just add then normalize bc different directions apply different forces)
 
         //normalize input (make it not faster to go diagonal)
         Vector2 combined = input.normalized;
@@ -80,15 +102,18 @@ public class AWSDMovement : MonoBehaviour
         //recombine the forces to get the move force vector
         Vector3 moveForceVector = forward + backward + strafe;
 
-        //Update movementInputDirection in MovementResources
-        moveRes.movementInputDirection = moveForceVector.normalized;
-
-        //Air Multiplier
+        //Multipliers
+        moveForceVector *= moveMultiplier;
         if (!moveRes.grounded)
             moveForceVector *= airMultiplier;
+        if (sprinting)
+            moveForceVector *= sprintMultiplier;
 
-        //Slope handling
+        return moveForceVector;
+    }
 
+    private Vector3 ApplySlopeHandling(Vector3 moveForceVector)
+    {
         //if grounded align the moveVector with the slope plane 
         if (moveRes.grounded)
             moveForceVector = moveRes.ProjectOnGroundHit(moveForceVector);
@@ -108,20 +133,29 @@ public class AWSDMovement : MonoBehaviour
                 rb.AddForce(slopeDown * tooSteepSlopeForce * 2f * Mathf.Cos(moveRes.GroundAngleRad()), ForceMode.Force);
 
             //if the movement vector points towards the slope return before movement force is applied
-            //prevents normal climbing
+            //prevents wall climbing
             if (Vector3.Dot(slopeFacing, moveXZ) < 0f)
             {
-                return;
+                return Vector3.zero;
             }
         }
 
-        //Apply movement force
+        return moveForceVector;
+    }
 
-        //you can only move if xz speed is less than max speed, works as long as drag > 0
+    private void ApplyMovementForce(Vector3 moveForceVector)
+    {
+        //you can only move if xz speed is less than cutoff speed, works as long as drag > 0
         float xzSpeed = moveRes.XZvelocity().magnitude;
-        if (xzSpeed <= cutoffSpeed)
+
+        float adjustedCutoffSpeed = cutoffSpeed;
+        if (sprinting) adjustedCutoffSpeed = sprintCutoffSpeed;
+
+        if (xzSpeed <= adjustedCutoffSpeed)
             rb.AddForce(moveForceVector * 10f, ForceMode.Force);
     }
+
+    //Other Fixed Update Methods
 
     private void ApplyGroundingForce()
     {
@@ -131,7 +165,6 @@ public class AWSDMovement : MonoBehaviour
             float sm = Mathf.Pow(Mathf.Sin(angle), 0.25f); //steepness multiplier, 0 when angle = 0, 1 when angle = pi/2, concave down
             rb.AddForce(groundingForce * sm * -moveRes.GroundNormal(), ForceMode.Force);
         }
-
     }
 
     private void ApplyDrag()
@@ -142,10 +175,11 @@ public class AWSDMovement : MonoBehaviour
             moveRes.ApplyAirDrag(airDrag);
         else if (dragType == DragType.GROUND_AND_AIR)
         {
-            ApplyGroundDrag();
-            moveRes.ApplyAirDrag(airDrag);
+            if (moveRes.grounded) ApplyGroundDrag();
+            moveRes.ApplyAirDrag(airDrag); //apply air drag either way, it's realistic
         }
     }
+
     private void ApplyGroundDrag()
     {
         if (moveRes.grounded)
@@ -159,6 +193,8 @@ public class AWSDMovement : MonoBehaviour
         else
             moveRes.ApplyXZGroundDrag(groundDrag);
     }
+
+    //Resource Methods
 
     public void Activate()
     {
@@ -180,24 +216,29 @@ public class AWSDMovement : MonoBehaviour
 
     public void SaveStartingValues()
     {
-        savedValues = new float[10];
+        savedValues = new float[13];
 
         //Movement
         savedValues[0] = moveForce;
         savedValues[1] = backForce;
         savedValues[2] = strafeForce;
-        savedValues[3] = airMultiplier;
-        savedValues[4] = cutoffSpeed;
+        savedValues[3] = moveMultiplier;
+        savedValues[4] = airMultiplier;
+        savedValues[5] = cutoffSpeed;
+
+        //Sprint
+        savedValues[6] = sprintMultiplier;
+        savedValues[7] = sprintCutoffSpeed;
 
         //Drag
-        savedValues[5] = groundDrag;
-        savedValues[6] = airDrag;
+        savedValues[8] = groundDrag;
+        savedValues[9] = airDrag;
         savedDragType = dragType;
 
         //Slope
-        savedValues[7] = groundingForce;
-        savedValues[8] = tooSteepSlopeForce;
-        savedValues[9] = steepSlopeUpwardYDragMultiplier;
+        savedValues[10] = groundingForce;
+        savedValues[11] = tooSteepSlopeForce;
+        savedValues[12] = steepSlopeUpwardYDragMultiplier;
     }
     public void Reset()
     {
@@ -208,22 +249,28 @@ public class AWSDMovement : MonoBehaviour
         moveForce = savedValues[0];
         backForce = savedValues[1];
         strafeForce = savedValues[2];
-        airMultiplier = savedValues[3];
-        cutoffSpeed = savedValues[4];
+        moveMultiplier = savedValues[3];
+        airMultiplier = savedValues[4];
+        cutoffSpeed = savedValues[5];
+
+        //Sprint
+        sprintMultiplier = savedValues[6];
+        sprintCutoffSpeed = savedValues[7];
 
         //Drag
-        groundDrag = savedValues[5];
-        airDrag = savedValues[6];
+        groundDrag = savedValues[8];
+        airDrag = savedValues[9];
         dragType = savedDragType;
 
         //Slope
-        groundingForce = savedValues[7];
-        tooSteepSlopeForce = savedValues[8];
-        steepSlopeUpwardYDragMultiplier = savedValues[9];
+        groundingForce = savedValues[10];
+        tooSteepSlopeForce = savedValues[11];
+        steepSlopeUpwardYDragMultiplier = savedValues[12];
     }
 
     public enum DragType
     {
-        NONE, GROUND, AIR, GROUND_AND_AIR
+        GROUND, AIR, GROUND_AND_AIR
+        //player feet will always cause some drag when on surfaces
     }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using static ThirdPersonPlayerCam;
 
 public class PlayerCam : MonoBehaviour
 {
@@ -34,13 +35,30 @@ public class PlayerCam : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha5))
+        //input camera switch
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             CutToFirstPersonCam();
         }
-        if (Input.GetKeyDown(KeyCode.Alpha6))
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             CutToThirdPersonCam();
+            thirdPersonCamScript.SetCameraStyle(CameraStyle.Basic);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            CutToThirdPersonCam();
+            thirdPersonCamScript.SetCameraStyle(CameraStyle.LockedBehind);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            CutToThirdPersonCam();
+            thirdPersonCamScript.SetCameraStyle(CameraStyle.Combat);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            CutToThirdPersonCam();
+            thirdPersonCamScript.SetCameraStyle(CameraStyle.Topdown);
         }
     }
 

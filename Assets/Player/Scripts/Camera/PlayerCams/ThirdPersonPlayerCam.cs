@@ -23,14 +23,6 @@ public class ThirdPersonPlayerCam : MonoBehaviour
         SetCameraStyle(currentStyle);
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SetCameraStyle(CameraStyle.Basic);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SetCameraStyle(CameraStyle.LockedBehind);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SetCameraStyle(CameraStyle.Combat);
-        if (Input.GetKeyDown(KeyCode.Alpha4)) SetCameraStyle(CameraStyle.Topdown);
-    }
-
     public void SetCameraStyle(CameraStyle newStyle)
     {
         DeactivateAllVCams();
