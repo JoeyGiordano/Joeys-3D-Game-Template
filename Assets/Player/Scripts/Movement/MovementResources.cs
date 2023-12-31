@@ -12,9 +12,9 @@ public class MovementResources : MonoBehaviour
 {
     //references
     Rigidbody rb;
-    CapsuleCollider coll;
     Gravity grav;
     AWSDMovement awsd;
+    [HideInInspector] public CapsuleCollider coll;
 
     [Header("Locations")]
     public Transform orientation;

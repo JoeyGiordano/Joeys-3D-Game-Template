@@ -1062,6 +1062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08df5f2de4b474e53b3e3d5e3712cd86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  coll: {fileID: 0}
   orientation: {fileID: 6461943581996083859}
   topOfPlayer: {fileID: 6792573896543303738}
   bottomOfPlayer: {fileID: 4726405537273560541}
@@ -1102,6 +1103,10 @@ MonoBehaviour:
   groundingForce: 200
   tooSteepSlopeForce: 100
   steepSlopeUpwardYDragMultiplier: 0.45
+  maxStepHeight: 0.4
+  minStepDepth: 0.3
+  stairPush: 15
+  stairCheckAngle: 45
 --- !u!114 &3517471366838291065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1148,6 +1153,8 @@ MonoBehaviour:
   active: 0
   crouchKey: 99
   crouchScale: 0.6
+  moveMultiplier: 0.6
+  cutoffSpeed: 7
 --- !u!1 &2940417909565605342
 GameObject:
   m_ObjectHideFlags: 0

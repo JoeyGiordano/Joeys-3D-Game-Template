@@ -34,6 +34,12 @@ public class AWSDMovement : MonoBehaviour
     public float tooSteepSlopeForce = 100;  //max force used for pushing the player down a too steep slope
     public float steepSlopeUpwardYDragMultiplier = 0.45f;
 
+    [Header("Stairs")]
+    public float maxStepHeight = 0.3f;
+    public float minStepDepth = 0.55f;
+    public float stairPush = 10;             //upwards transform movement applied when on stairs
+    private float stairCheckAngle = 45;      //anlge at which stair check are performed (in addition to forward)
+
     //Input
     Vector2 input;
     bool sprinting;
@@ -84,6 +90,8 @@ public class AWSDMovement : MonoBehaviour
         Vector3 moveForceVector = CalculateMoveForce();
         //Update movementInputDirection in MovementResources
         moveRes.movementInputDirection = moveForceVector.normalized;
+        //Handle Stairs
+        HandleStairs(moveForceVector);
         //Apply slope adjustments
         moveForceVector = ApplySlopeHandling(moveForceVector);
         //Add force to the player rb
@@ -113,12 +121,52 @@ public class AWSDMovement : MonoBehaviour
         return moveForceVector;
     }
 
+    private bool HandleStairs(Vector3 moveForceVector)
+    {
+        //calculate stairCast inputs
+        //a skinny box with height (maxStepHeight - a little big) and length (collider radius)
+        Vector3 lowCenter = moveRes.bottomOfPlayer.transform.position + (0.01f + maxStepHeight / 2) * Vector3.up + moveForceVector.normalized * moveRes.coll.radius / 2;
+        Vector3 lowHalfExtents = new Vector3(0.2f, maxStepHeight / 2, moveRes.coll.radius);
+        //a skinny box bow with height (player height - maxStepHeight - a little bit) and length (collider radius)
+        Vector3 highCenter = moveRes.bottomOfPlayer.transform.position + (0.01f + moveRes.coll.height/2 + maxStepHeight) * Vector3.up + moveForceVector.normalized * moveRes.coll.radius / 2;
+        Vector3 highHalfExtents = new Vector3(0.2f, (moveRes.coll.height - maxStepHeight - 0.01f) / 2, moveRes.coll.radius);
+        //direction is angled up so it doesn't hit any walkable slopes
+        Vector3 direction = RotateTowards(moveForceVector.normalized, Vector3.up, moveRes.steepSlopeAngle);
+        //length of boxcasts
+        float lowDist = moveRes.coll.radius * 1.2f;
+        float highDist = minStepDepth;
+        //if small step impeding movement
+        Debug.DrawRay(lowCenter + moveRes.orientation.forward, highHalfExtents.y * Vector3.up, Color.red, 0.2f);
+        if (StepCast(lowCenter, lowHalfExtents, highCenter, highHalfExtents, direction, lowDist, highDist, moveRes.groundLayer))
+        {
+            Debug.Log("here");
+            //move up and return true
+            transform.position += stairPush * Vector3.up * Time.deltaTime;
+            return true;
+        }
+        direction = Quaternion.Euler(0, -stairCheckAngle, 0) * direction;   //rotate the cast direction about the y axis
+        if (StepCast(lowCenter, lowHalfExtents, highCenter, highHalfExtents, direction, lowDist, highDist, moveRes.groundLayer))
+        {
+            Debug.Log("here");
+            transform.position += stairPush * Vector3.up * Time.deltaTime;
+            return true;
+        }
+        direction = Quaternion.Euler(0, stairCheckAngle * 2, 0) * direction;  //rotate the cast direction to the other side
+        if (StepCast(lowCenter, lowHalfExtents, highCenter, highHalfExtents, direction, lowDist, highDist, moveRes.groundLayer))
+        {
+            Debug.Log("here");
+            transform.position += stairPush * Vector3.up * Time.deltaTime;
+            return true;
+        }
+        return false;
+    }
+
     private Vector3 ApplySlopeHandling(Vector3 moveForceVector)
     {
         //if grounded align the moveVector with the slope plane 
         if (moveRes.grounded)
             moveForceVector = moveRes.ProjectOnGroundHit(moveForceVector);
-        //if slope to steep only allow movement away from slope
+        //if slope to steep and not on stairs only allow movement away from slope
         if (moveRes.onTooSteepSlope)
         {
             Vector3 slopeFacing = moveRes.ProjectOnFlat(moveRes.GroundNormal()).normalized;
@@ -193,6 +241,26 @@ public class AWSDMovement : MonoBehaviour
         }
         else
             moveRes.ApplyXZGroundDrag(groundDrag);
+    }
+
+    private bool StepCast(Vector3 lowCenter, Vector3 lowHalfExtents, Vector3 highCenter, Vector3 highHalfExtents, Vector3 direction, float lowDist, float highDist, LayerMask mask)
+    {
+        //if there is a hit on the low box cast...
+        if (Physics.BoxCast(lowCenter, lowHalfExtents, direction, moveRes.orientation.rotation, lowDist, mask)) {
+            Debug.Log("low");
+            //but there isn't a hit on the high boxcast...
+            if (!Physics.BoxCast(highCenter, highHalfExtents, direction, moveRes.orientation.rotation, highDist, mask)) {
+                //a step has been hit
+                Debug.Log("high");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Vector3 RotateTowards(Vector3 start, Vector3 target, float maxDegrees)
+    {
+        return Vector3.RotateTowards(start, target, maxDegrees * Mathf.Deg2Rad, 0);
     }
 
     //Resource Methods
