@@ -1,10 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Crouch : MovementState
 {
-    public KeyCode crouchKey = KeyCode.CapsLock;
     public float crouchScale = 0.6f;
     public float moveMultiplier = 0.6f;
     public float cutoffSpeed = 7f;
@@ -21,7 +18,9 @@ public class Crouch : MovementState
 
     public override bool EnterCondition()
     {
-        if (stateMachine.state == MoveState.free && Input.GetKey(crouchKey))
+        if (stateMachine.state == MoveState.free
+            && Input.GetKey(stateMachine.slide.slideKey)
+            && rb.velocity.magnitude < stateMachine.slide.minSlideSpeed)
             return true;
         else
             return false;
@@ -46,7 +45,7 @@ public class Crouch : MovementState
 
     public override bool ExitCondition()
     {
-        if (Input.GetKeyUp(crouchKey))
+        if (Input.GetKeyUp(stateMachine.slide.slideKey))
             return true;
         else
             return false;

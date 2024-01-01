@@ -64,7 +64,6 @@ public class AWSDMovement : MonoBehaviour
         MovePlayer();
         ApplyGroundingForce();
         ApplyDrag();
-
     }
 
     private void GetInput()
@@ -129,7 +128,6 @@ public class AWSDMovement : MonoBehaviour
             //the slope applies a kinda upwards force when the rb gets pushed by it
             //this cancels that out
             //the cos makes the force right for different slope angles
-            //the
             if (moveForceVector == Vector3.zero)
                 rb.AddForce(slopeDown * tooSteepSlopeForce * 2f * Mathf.Cos(moveRes.GroundAngleRad()), ForceMode.Force);
 

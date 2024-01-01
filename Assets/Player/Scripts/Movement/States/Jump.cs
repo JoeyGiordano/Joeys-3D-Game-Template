@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Jump : MovementState
@@ -21,7 +19,7 @@ public class Jump : MovementState
 
     public override bool EnterCondition()
     {
-        if (Input.GetKeyDown(jumpKey))
+        if (Input.GetKeyDown(jumpKey) /*&& !active*/)     //&& !active prevents double jumping
             return true;
         else
             return false;

@@ -35,6 +35,7 @@ public class MovementResources : MonoBehaviour
     [Header("Other")]
     public TextMeshProUGUI text;
     public Vector3 movementInputDirection;     //the current direction of the player movement input, set by AWSDMovement in fixed update, can be set by other movementstate scripts (normalize!), used by cameras
+    public GameObject playerModel;
 
     void Start()
     {
@@ -92,7 +93,7 @@ public class MovementResources : MonoBehaviour
     public void ScalePlayerY(float scaleMultiplier)
     {
         if (scaleMultiplier <= 0) { Debug.Log("Illegal scale multiplier"); return; }
-        if (coll.radius * 2 > coll.height * scaleMultiplier) { Debug.Log("Scale multiplier floored"); scaleMultiplier = coll.height / (2 * coll.radius); }
+        if (coll.radius * 2 > coll.height * scaleMultiplier) { Debug.Log("YScale multiplier too small"); scaleMultiplier = coll.height / (2 * coll.radius); }
         float oldHeight = coll.height;
         //scale capsule collider height
         coll.height *= scaleMultiplier;
@@ -101,11 +102,12 @@ public class MovementResources : MonoBehaviour
         coll.center += heightChange/2 * Vector3.up;
         //scale orientation
         orientation.localScale = new Vector3(orientation.localScale.x, orientation.localScale.y * scaleMultiplier, orientation.localScale.z);
+        playerModel.transform.localScale = new Vector3(playerModel.transform.localScale.x, playerModel.transform.localScale.y * scaleMultiplier, playerModel.transform.localScale.z);
     }
     public void ScalePlayerXZ(float scaleMultiplier)
     {
         if (scaleMultiplier <= 0) { Debug.Log("Illegal scale multiplier"); return; }
-        if (coll.radius * scaleMultiplier > coll.height/2) { Debug.Log("Scale multiplier truncated"); scaleMultiplier = coll.height / (2 * coll.radius); }
+        if (coll.radius * scaleMultiplier > coll.height/2) { Debug.Log("XZScale multiplier to big"); scaleMultiplier = coll.height / (2 * coll.radius); }
         //change the collider radius
         coll.radius *= scaleMultiplier;
         //scale orientation

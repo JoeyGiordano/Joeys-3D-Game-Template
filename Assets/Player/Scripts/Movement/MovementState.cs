@@ -79,7 +79,7 @@ public abstract class MovementState : MonoBehaviour
         }
 
         //if enter condition is met...
-        if (!active && EnterCondition())
+        if (EnterCondition())
         {
             //store the active state
             MoveState previousState = stateMachine.state;
@@ -163,5 +163,6 @@ public abstract class MovementState : MonoBehaviour
         free,
         jumping,
         crouching,
+        slide,
     }
 }

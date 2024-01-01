@@ -1,4 +1,5 @@
 using UnityEngine;
+using static MovementState;
 
 /// <summary>
 ///
@@ -36,12 +37,16 @@ using UnityEngine;
 public class PlayerMovementStateMachine : MonoBehaviour
 {
     //the current movement state
-    public MovementState.MoveState state;
+    public MoveState state;
+
+    //movement resources script
+    MovementResources moveRes;
 
     //*TODO*TODO* create a variable to store your new MovementState child script
-    MovementState free;
-    MovementState jump;
-    MovementState crouch;
+    public Free free;
+    public Jump jump;
+    public Crouch crouch;
+    public Slide slide;
 
     void Start()
     {
@@ -56,13 +61,13 @@ public class PlayerMovementStateMachine : MonoBehaviour
 
     private void CollectReferences()
     {
-        //*TODO*TODO* check if your new MovementState child script is attached to the gameobject, if it is get and store it
-        if (GetComponent<Free>())
-            free = GetComponent<Free>();
-        if (GetComponent<Jump>())
-            jump = GetComponent<Jump>();
-        if (GetComponent<Crouch>())
-            crouch = GetComponent<Crouch>();
+        moveRes = GetComponent<MovementResources>();
+
+        //*TODO*TODO* get and store your new movement state child script
+        free = GetComponent<Free>();
+        jump = GetComponent<Jump>();
+        crouch = GetComponent<Crouch>();
+        slide = GetComponent<Slide>();
 
     }
 
@@ -75,6 +80,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
         free.Startup(this, moveRes);
         jump.Startup(this, moveRes);
         crouch.Startup(this, moveRes);
+        slide.Startup(this, moveRes);
 
     }
 
@@ -90,6 +96,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
         free.Reset();
         jump.Reset();
         crouch.Reset();
+        slide.Reset();
     }
 
     /// <summary>
@@ -110,32 +117,36 @@ public class PlayerMovementStateMachine : MonoBehaviour
     /// or to transition into a state when no state was active (like at initiation).
     /// </summary>
     /// <param name="nextState"></param>
-    public void TransitionTo(MovementState.MoveState nextState)
+    public void TransitionTo(MoveState nextState)
     {
         //store the old state
-        MovementState.MoveState previousState = state;
+        MoveState previousState = state;
         //change the state variable
         state = nextState;
         //get the script for the new state
         MovementState nextStateScript = MoveStateToScript(nextState);
         //activate the new state script, its WhileActive() will now run every update
         nextStateScript.active = true;
+        //turn on/off awsd movement
+        if (nextStateScript.UseAWSD()) moveRes.ActivateAWSD(); else moveRes.DeactivateAWSD();
         //run the on enter code (as specified in child), passing the previous state as an argument (to be used in child)
         nextStateScript.OnEnter(previousState);
     }
 
-    public MovementState MoveStateToScript(MovementState.MoveState state)
+    public MovementState MoveStateToScript(MoveState state)
     {
         //*TODO*TODO* go to the MovementState child script and add your new state to MoveState enum (at the bottom, marked with *TODO*TODO*)
         //*TODO*TODO* in the below switch case, add a case for the the MoveState you just created and return your new MovementState child script 
         switch (state)
         {
-            case MovementState.MoveState.free:
+            case MoveState.free:
                 return free;
-            case MovementState.MoveState.jumping:
+            case MoveState.jumping:
                 return jump;
-            case MovementState.MoveState.crouching:
+            case MoveState.crouching:
                 return crouch;
+            case MoveState.slide:
+                return slide;
             default:
                 Debug.LogError("PlayerMovementStateMachine: MovementState " + state + " has no associated script");
                 return null;    //if the code gets here, a MovementScript-MoveState pair is not added
