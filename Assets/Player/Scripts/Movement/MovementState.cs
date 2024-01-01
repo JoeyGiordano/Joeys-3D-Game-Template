@@ -164,5 +164,6 @@ public abstract class MovementState : MonoBehaviour
         jumping,
         crouching,
         slide,
+        airDash,
     }
 }

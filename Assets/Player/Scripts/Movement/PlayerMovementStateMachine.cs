@@ -43,10 +43,11 @@ public class PlayerMovementStateMachine : MonoBehaviour
     MovementResources moveRes;
 
     //*TODO*TODO* create a variable to store your new MovementState child script
-    public Free free;
-    public Jump jump;
-    public Crouch crouch;
-    public Slide slide;
+    [HideInInspector] public Free free;
+    [HideInInspector] public Jump jump;
+    [HideInInspector] public Crouch crouch;
+    [HideInInspector] public Slide slide;
+    [HideInInspector] public AirDash airDash;
 
     void Start()
     {
@@ -68,19 +69,18 @@ public class PlayerMovementStateMachine : MonoBehaviour
         jump = GetComponent<Jump>();
         crouch = GetComponent<Crouch>();
         slide = GetComponent<Slide>();
+        airDash = GetComponent<AirDash>();
 
     }
 
     private void StartupMovementStateScripts()
     {
-        //get the MovementResources that will be passed to the MovementScripts
-        MovementResources moveRes = GetComponent<MovementResources>();
-
         //*TODO*TODO* call the Startup method on your new MovementState child script, pass this and moveRes
         free.Startup(this, moveRes);
         jump.Startup(this, moveRes);
         crouch.Startup(this, moveRes);
         slide.Startup(this, moveRes);
+        airDash.Startup(this, moveRes);
 
     }
 
@@ -97,6 +97,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
         jump.Reset();
         crouch.Reset();
         slide.Reset();
+        airDash.Reset();
     }
 
     /// <summary>
@@ -147,6 +148,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
                 return crouch;
             case MoveState.slide:
                 return slide;
+            case MoveState.airDash:
+                return airDash;
             default:
                 Debug.LogError("PlayerMovementStateMachine: MovementState " + state + " has no associated script");
                 return null;    //if the code gets here, a MovementScript-MoveState pair is not added

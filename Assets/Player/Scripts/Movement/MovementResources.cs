@@ -36,6 +36,7 @@ public class MovementResources : MonoBehaviour
     public TextMeshProUGUI text;
     public Vector3 movementInputDirection;     //the current direction of the player movement input, set by AWSDMovement in fixed update, can be set by other movementstate scripts (normalize!), used by cameras
     public GameObject playerModel;
+    public Vector3 facingDirection;
 
     void Start()
     {
@@ -48,6 +49,7 @@ public class MovementResources : MonoBehaviour
     void Update()
     {
         GroundCheck();
+        CalculateFacingDirection();
         UI();
     }
 
@@ -76,6 +78,11 @@ public class MovementResources : MonoBehaviour
             //turn on onTooSteepSlope
             onTooSteepSlope = true;
         } else onTooSteepSlope = false;
+    }
+
+    private void CalculateFacingDirection()
+    {
+        facingDirection = Camera.main.gameObject.transform.forward;
     }
 
     //Gravity

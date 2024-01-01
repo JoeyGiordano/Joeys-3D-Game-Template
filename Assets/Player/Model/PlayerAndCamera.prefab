@@ -816,7 +816,7 @@ GameObject:
   - component: {fileID: 6105510754640836737}
   m_Layer: 0
   m_Name: Camera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -950,6 +950,7 @@ GameObject:
   - component: {fileID: 7888667194159274530}
   - component: {fileID: 6171666039325760315}
   - component: {fileID: 3666952169487295540}
+  - component: {fileID: 8686535460642650117}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1055,6 +1056,7 @@ MonoBehaviour:
   jump: {fileID: 0}
   crouch: {fileID: 0}
   slide: {fileID: 0}
+  airDash: {fileID: 0}
 --- !u!114 &1719214748352371193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1080,6 +1082,7 @@ MonoBehaviour:
   text: {fileID: 0}
   movementInputDirection: {x: 0, y: 0, z: 0}
   playerModel: {fileID: 6855557162896128881}
+  facingDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &2327904064021446493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1175,6 +1178,25 @@ MonoBehaviour:
   slideForce: 2
   slideDrag: 0.02
   minSlideSpeed: 4
+--- !u!114 &8686535460642650117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2924709640057065964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 825c10b8ce1944ab78a77b00809ec220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myState: 0
+  active: 0
+  mouseButtonCode: 1
+  airDashImpulse: 50
+  airDashForce: 0
+  airDashDrag: 0.001
+  minAirDashSpeed: 0.01
 --- !u!1 &2940417909565605342
 GameObject:
   m_ObjectHideFlags: 0
@@ -1442,7 +1464,7 @@ GameObject:
   - component: {fileID: 8065760187233300529}
   m_Layer: 0
   m_Name: BrainCamera
-  m_TagString: Untagged
+  m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
