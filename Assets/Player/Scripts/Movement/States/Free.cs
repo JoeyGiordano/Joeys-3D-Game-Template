@@ -59,4 +59,9 @@ public class Free : MovementState
         //do nothing
     }
 
+    public override void UpdateChild()
+    {
+        //do nothing
+    }
+
 }

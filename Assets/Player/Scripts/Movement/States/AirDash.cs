@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AirDash : MovementState
 {
-    public int mouseButtonCode = 1;
+    int mouseButtonCode = 1;
     public float airDashImpulse = 30f;
     public float airDashForce = 5f;
     public float airDashDrag = 0.03f;
@@ -17,12 +17,12 @@ public class AirDash : MovementState
 
     public override MoveState getMyState()
     {
-        return MoveState.airDash;
+        return MoveState.airDashing;
     }
 
     public override bool EnterCondition()
     {
-        if (Input.GetMouseButtonDown(1) && !active && !MoveRes.grounded)
+        if (Input.GetMouseButtonDown(mouseButtonCode) && !active && !MoveRes.grounded)
             return true;
         return false;
     }
@@ -62,6 +62,11 @@ public class AirDash : MovementState
     }
 
     public override void OnReset()
+    {
+        //do nothing
+    }
+
+    public override void UpdateChild()
     {
         //do nothing
     }

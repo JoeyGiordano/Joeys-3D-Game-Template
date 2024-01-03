@@ -73,4 +73,8 @@ public class Jump : MovementState
         //reset any accumulated values etc
     }
 
+    public override void UpdateChild()
+    {
+        //do nothing
+    }
 }

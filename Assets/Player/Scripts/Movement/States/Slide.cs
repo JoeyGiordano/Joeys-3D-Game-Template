@@ -18,7 +18,7 @@ public class Slide : MovementState
 
     public override MoveState getMyState()
     {
-        return MoveState.slide;
+        return MoveState.sliding;
     }
 
     public override bool EnterCondition()
@@ -70,6 +70,11 @@ public class Slide : MovementState
     }
 
     public override void OnReset()
+    {
+        //do nothing
+    }
+
+    public override void UpdateChild()
     {
         //do nothing
     }

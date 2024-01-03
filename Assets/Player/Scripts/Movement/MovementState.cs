@@ -60,6 +60,9 @@ public abstract class MovementState : MonoBehaviour
 
     void Update()
     {
+        //update child
+        UpdateChild();
+
         //if exit condition is met...
         if (active && ExitCondition())
         {
@@ -69,13 +72,6 @@ public abstract class MovementState : MonoBehaviour
             active = false;
             //tell the state machine what state to transition to next
             stateMachine.TransitionTo(nextState);
-        }
-
-        //if this state is active...
-        if (active)
-        {
-            //run the while active code (as specified in child)
-            WhileActive();
         }
 
         //if enter condition is met...
@@ -95,6 +91,16 @@ public abstract class MovementState : MonoBehaviour
             OnEnter(previousState);
         }
 
+    }
+
+    private void FixedUpdate()
+    {
+        //if this state is active...
+        if (active)
+        {
+            //run the while active code (as specified in child)
+            WhileActive();
+        }
     }
 
     /// <summary>
@@ -151,9 +157,14 @@ public abstract class MovementState : MonoBehaviour
     public abstract void OnStartup();
 
     /// <summary>
-    /// What happens while a state is active (forces, graphics, etc).
+    /// What happens while a state is active (forces, graphics, etc). Called during FixedUpdate()
     /// </summary>
     public abstract void WhileActive();
+
+    /// <summary>
+    /// Called during Update (before anything else), most children will not use this
+    /// </summary>
+    public abstract void UpdateChild();
 
     //enum to store all possible movement states
     public enum MoveState
@@ -163,7 +174,9 @@ public abstract class MovementState : MonoBehaviour
         free,
         jumping,
         crouching,
-        slide,
-        airDash,
+        sliding,
+        airDashing,
+        grappling,
+        wallRunning,
     }
 }

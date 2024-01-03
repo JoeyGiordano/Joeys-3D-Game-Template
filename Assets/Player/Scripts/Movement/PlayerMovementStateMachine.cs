@@ -48,6 +48,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
     [HideInInspector] public Crouch crouch;
     [HideInInspector] public Slide slide;
     [HideInInspector] public AirDash airDash;
+    [HideInInspector] public Grapple grapple;
+    [HideInInspector] public WallRun wallRun;
 
     void Start()
     {
@@ -70,6 +72,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
         crouch = GetComponent<Crouch>();
         slide = GetComponent<Slide>();
         airDash = GetComponent<AirDash>();
+        grapple = GetComponent<Grapple>();
+        wallRun = GetComponent<WallRun>();
 
     }
 
@@ -81,6 +85,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
         crouch.Startup(this, moveRes);
         slide.Startup(this, moveRes);
         airDash.Startup(this, moveRes);
+        grapple.Startup(this, moveRes);
+        wallRun.Startup(this, moveRes);
 
     }
 
@@ -98,6 +104,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
         crouch.Reset();
         slide.Reset();
         airDash.Reset();
+        grapple.Reset();
+        wallRun.Reset();
     }
 
     /// <summary>
@@ -146,13 +154,25 @@ public class PlayerMovementStateMachine : MonoBehaviour
                 return jump;
             case MoveState.crouching:
                 return crouch;
-            case MoveState.slide:
+            case MoveState.sliding:
                 return slide;
-            case MoveState.airDash:
+            case MoveState.airDashing:
                 return airDash;
+            case MoveState.grappling:
+                return grapple;
+            case MoveState.wallRunning:
+                return wallRun;
             default:
                 Debug.LogError("PlayerMovementStateMachine: MovementState " + state + " has no associated script");
                 return null;    //if the code gets here, a MovementScript-MoveState pair is not added
         }
+    }
+
+    public bool isInState(params MoveState[] states)
+    {
+        foreach (MoveState s in states)
+            if (s == state)
+                return true;
+        return false;
     }
 }

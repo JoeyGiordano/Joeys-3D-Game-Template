@@ -15,7 +15,7 @@ public class FirstPersonPlayerCam : MonoBehaviour
     public float xSensitivity;
     public float ySensitivity;
     [SerializeField]
-    private float fov = 80f;
+    public float normalFOV = 80f;
 
     float xRotation;
     float yRotation;
@@ -24,7 +24,7 @@ public class FirstPersonPlayerCam : MonoBehaviour
     {
         cam = GetComponentInChildren<Camera>();
         camObj = cam.gameObject;
-        SetFOV(fov);
+        SetFOV(normalFOV);
     }
 
     void Update()

@@ -68,4 +68,9 @@ public class Crouch : MovementState
         //do nothing
     }
 
+    public override void UpdateChild()
+    {
+        //do nothing
+    }
+
 }

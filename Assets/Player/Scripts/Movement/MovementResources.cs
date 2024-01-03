@@ -21,6 +21,7 @@ public class MovementResources : MonoBehaviour
     public Transform topOfPlayer;
     public Transform bottomOfPlayer;
     public Transform centerOfPlayer;
+    public Transform eyes;
 
     [Header("Grounding")]
     public bool grounded = false;       //true when the spherecast hits the ground, and the slope is less than maxSlopeAngleConsideredGround 
@@ -31,12 +32,14 @@ public class MovementResources : MonoBehaviour
 
     [Header("Layer Masks")]
     public LayerMask groundLayer;
+    public LayerMask wallLayer;
 
     [Header("Other")]
     public TextMeshProUGUI text;
     public Vector3 movementInputDirection;     //the current direction of the player movement input, set by AWSDMovement in fixed update, can be set by other movementstate scripts (normalize!), used by cameras
     public GameObject playerModel;
     public Vector3 facingDirection;
+    public PlayerCam playerCam;
 
     void Start()
     {
@@ -56,7 +59,7 @@ public class MovementResources : MonoBehaviour
     private void FixedUpdate()
     {
         //noise kill
-        KillVelocity(0.001f);
+        KillVelocityBelow(0.001f);
     }
 
     private void UI()
@@ -160,17 +163,17 @@ public class MovementResources : MonoBehaviour
     }
 
     //Kill Velocity
-    public void KillVelocity(float minSpeed)
+    public void KillVelocityBelow(float minSpeed)
     {
         if (rb.velocity.magnitude < minSpeed)
             rb.velocity = Vector3.zero;
     }
-    public void KillXZvelocity(float minSpeed)
+    public void KillXZvelocityBelow(float minSpeed)
     {
         if (XZvelocity().magnitude < minSpeed)
             rb.velocity = Yvelocity();
     }
-    public void KillYvelocity(float minSpeed)
+    public void KillYvelocityBelow(float minSpeed)
     {
         if (rb.velocity.y < minSpeed)
             rb.velocity = XZvelocity();
@@ -217,6 +220,13 @@ public class MovementResources : MonoBehaviour
             rb.velocity -= drag * Mathf.Pow(rb.velocity.sqrMagnitude, (pow - 1f) / 2f) * XZvelocity();
         else
             rb.velocity -= drag * Mathf.Pow(rb.velocity.sqrMagnitude, (pow - 1f) / 2f) * rb.velocity;
+    }
+
+    //Extra Falling Force
+    public void ApplyExtraFallingForce(float force)
+    {
+        if (rb.velocity.y < 0)
+            rb.AddForce(force * Vector3.down, ForceMode.Force);
     }
 
     //Ground Results

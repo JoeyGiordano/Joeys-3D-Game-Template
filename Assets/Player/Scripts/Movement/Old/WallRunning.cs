@@ -101,6 +101,7 @@ public class WallRunning : MonoBehaviour
         wallRight = !(rightDetect == 0);
     }
 
+    //
     private bool AboveGround()
     {
         return !Physics.Raycast(transform.position, Vector3.down, minJumpHeight, whatIsGround);

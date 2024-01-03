@@ -74,4 +74,20 @@ public class PlayerCam : MonoBehaviour
         firstPersonCam.SetActive(false);
         firstPerson = false;
     }
+
+    public void SetFirstPersonFOV(float fov, float transitionTime)
+    {
+        bool camActive = firstPersonCam.activeInHierarchy;
+        firstPersonCam.SetActive(true);
+        firstPersonCamScript.SetFOV(fov, transitionTime);
+        firstPersonCam.SetActive(camActive);
+    }
+
+    public void SetFirstPersonTilt(float tilt, float transitionTime)
+    {
+        bool camActive = firstPersonCam.activeInHierarchy;
+        firstPersonCam.SetActive(true);
+        firstPersonCamScript.SetRotation(new Vector3(0,0,tilt), transitionTime);
+        firstPersonCam.SetActive(camActive);
+    }
 }
