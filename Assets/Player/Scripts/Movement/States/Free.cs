@@ -3,10 +3,13 @@ using UnityEngine;
 public class Free : MovementState
 {
     //Note to people that are copying this to make a new movement state:
-    //You do not need to get the player object, a reference is already stored in the parent (type Player)
-    //A reference to the RigidBody is also stored in the parent (type rb)
-    //A reference to MovementResources is also already stored in the parent (type MoveRes)
-    //A reference to PlayerMovementStateMachine (use to access current state) is also already stored in the parent (type stateMachine)
+    //Several useful references are stored in the parent
+    // - player gameObject (Player)
+    // - player RigidBody (rb)
+    // - MovementResources (MoveRes) has many useful flags and resource methods
+    // - PlayerMovementStateMachine (stateMachine) has current state (state) and isInState()
+    // - secondsSinceEntered, the time since the state was entered
+
 
     public override void OnStartup()
     {

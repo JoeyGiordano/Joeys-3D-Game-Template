@@ -27,8 +27,14 @@ public class MovementResources : MonoBehaviour
     public bool grounded = false;       //true when the spherecast hits the ground, and the slope is less than maxSlopeAngleConsideredGround 
     public bool onTooSteepSlope = false;   //true when the spherecast hits the ground, but the slope is more than maxSlopeAngleConsideredGround
     public float steepSlopeAngle = 45;
-    [HideInInspector]
     public RaycastHit groundHit;    //what the grounding raycast is hitting, only meaningful when grounded
+
+    [Header("Wall Detection")]
+    public float wallCheckDistance;
+    public RaycastHit leftWallHit;
+    public RaycastHit rightWallHit;
+    public bool wallLeft;
+    public bool wallRight;
 
     [Header("Layer Masks")]
     public LayerMask groundLayer;
@@ -36,9 +42,9 @@ public class MovementResources : MonoBehaviour
 
     [Header("Other")]
     public TextMeshProUGUI text;
-    public Vector3 movementInputDirection;     //the current direction of the player movement input, set by AWSDMovement in fixed update, can be set by other movementstate scripts (normalize!), used by cameras
+    [HideInInspector] public Vector3 movementInputDirection;     //used by cameras, the current direction of the player movement input, set by AWSDMovement in fixed update, can be set by other movementstate scripts (normalize!), used by cameras
     public GameObject playerModel;
-    public Vector3 facingDirection;
+    [HideInInspector] public Vector3 facingDirection;
     public PlayerCam playerCam;
 
     void Start()
@@ -52,7 +58,8 @@ public class MovementResources : MonoBehaviour
     void Update()
     {
         GroundCheck();
-        CalculateFacingDirection();
+        WallCheck();
+        GetFacingDirection();
         UI();
     }
 
@@ -83,7 +90,7 @@ public class MovementResources : MonoBehaviour
         } else onTooSteepSlope = false;
     }
 
-    private void CalculateFacingDirection()
+    private void GetFacingDirection()
     {
         facingDirection = Camera.main.gameObject.transform.forward;
     }
@@ -253,5 +260,46 @@ public class MovementResources : MonoBehaviour
     public GameObject GroundHitObj()
     {
         return groundHit.collider.gameObject;
+    }
+
+    //wall check
+    private void WallCheck()
+    {
+        wallRight = false;
+        wallLeft = false;
+        //I took this wall check from quicksilver, I didn't really bother trying to figure out how it works but it does great and its not that expensive. I think Nate wrote it. Actually I made some edits
+        int RaysToShoot = 16;
+        //Shoots 4 Rays On Both Left and Right Side for More Generous Wall Detection
+        float delta = 180 / (RaysToShoot * 2);
+        float offset = 45;
+        //This looks complicated, but essentially it makes it so if any of the rays hit than it counts as wall running
+        for (int i = 0; i < RaysToShoot; i++)
+        {
+            var dir = Quaternion.Euler(0, offset + i * delta, 0) * orientation.forward;
+            bool leftCast = Physics.Raycast(transform.position, -dir, out leftWallHit, wallCheckDistance, wallLayer);
+            if (leftCast)
+            {
+                wallLeft = true;
+                break;
+            }
+        }
+        for (int i = 0; i < RaysToShoot; i++)
+        {
+            var dir = Quaternion.Euler(0, offset + i * delta, 0) * orientation.forward;
+            bool rightCast = Physics.Raycast(transform.position, dir, out rightWallHit, wallCheckDistance, wallLayer);
+            if (rightCast)
+            {
+                wallRight = true;
+                break;
+            }
+        }
+    }
+    public Vector3 GetWallNormal()
+    {
+        if (wallRight)
+            return rightWallHit.normal;
+        if (wallLeft)
+            return leftWallHit.normal;
+        return Vector3.zero;
     }
 }

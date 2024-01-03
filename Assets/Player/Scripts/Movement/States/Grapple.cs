@@ -1,14 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Grapple : MovementState
 {
+    int grappleMouseButton = 0;
+
+    [Header("Settings")]
     public float grappleRange = 25f;
     [Range(0, 1)]
     public float pullDuringSwing = 0.1f;
     public float extraFallingForce = 10;
-    int grappleMouseButton = 0;
+    public float releaseForce = 4;
+    
+    [Header("References")]
     public GameObject grappleGun;
     LineRenderer lr;
     PlayerCam cam;
@@ -120,6 +123,8 @@ public class Grapple : MovementState
 
         //remove the joint component
         Destroy(joint);
+
+        rb.AddForce(releaseForce * rb.velocity.normalized, ForceMode.Impulse);
 
     }
 

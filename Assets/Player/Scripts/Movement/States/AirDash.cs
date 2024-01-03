@@ -7,6 +7,7 @@ public class AirDash : MovementState
     public float airDashForce = 5f;
     public float airDashDrag = 0.03f;
     public float minAirDashSpeed = 5;
+    public float maxTime = 1.2f;
 
     Vector3 airDashDirection;
 
@@ -46,7 +47,7 @@ public class AirDash : MovementState
 
     public override bool ExitCondition()
     {
-        if (MoveRes.XZvelocity().magnitude < minAirDashSpeed || MoveRes.grounded)
+        if (MoveRes.XZvelocity().magnitude < minAirDashSpeed || MoveRes.grounded || secondsSinceEntered > maxTime)
             return true;
         return false;
     }

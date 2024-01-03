@@ -19,7 +19,7 @@ public class Jump : MovementState
 
     public override bool EnterCondition()
     {
-        if (Input.GetKeyDown(jumpKey) /*&& !active*/)     //&& !active prevents double jumping
+        if (Input.GetKeyDown(jumpKey) && stateMachine.isInState(MoveState.free, MoveState.jumping, MoveState.crouching, MoveState.airDashing))
             return true;
         else
             return false;

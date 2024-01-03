@@ -953,6 +953,7 @@ GameObject:
   - component: {fileID: 8686535460642650117}
   - component: {fileID: 3752754612675546475}
   - component: {fileID: 5201811069892651523}
+  - component: {fileID: 6503507542324482924}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -1061,6 +1062,7 @@ MonoBehaviour:
   airDash: {fileID: 0}
   grapple: {fileID: 0}
   wallRun: {fileID: 0}
+  wallJump: {fileID: 0}
 --- !u!114 &1719214748352371193
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1081,6 +1083,9 @@ MonoBehaviour:
   grounded: 0
   onTooSteepSlope: 0
   steepSlopeAngle: 45
+  wallCheckDistance: 0.7
+  wallLeft: 0
+  wallRight: 0
   groundLayer:
     serializedVersion: 2
     m_Bits: 1024
@@ -1205,6 +1210,7 @@ MonoBehaviour:
   airDashForce: 0
   airDashDrag: 0.001
   minAirDashSpeed: 0.01
+  maxTime: 0.6
 --- !u!114 &3752754612675546475
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1222,6 +1228,7 @@ MonoBehaviour:
   grappleRange: 25
   pullDuringSwing: 0.1
   extraFallingForce: 10
+  releaseForce: 6
   grappleGun: {fileID: 7387451112851476602}
   swingPoint: {x: 0, y: 0, z: 0}
 --- !u!114 &5201811069892651523
@@ -1238,13 +1245,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myState: 0
   active: 0
-  wallRunForce: 200
-  wallRunGravity: 0.3
-  wallJumpUpForce: 7
-  wallJumpSideForce: 12
-  exitWallTime: 0.2
-  wallCheckDistance: 0.7
+  wallRunForce: 7
+  wallRunGravity: 3
+  wallRunHorDrag: 0.3
+  wallRunVertDrag: 0.05
+  maxTime: 1.3
   minHeightAboveGround: 0.2
+--- !u!114 &6503507542324482924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2924709640057065964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f238456effb174d989a7a70c928734db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myState: 0
+  active: 0
+  maxTime: 0.2
+  wallJumpUpForce: 7
+  wallJumpSideForce: 5
 --- !u!1 &2940417909565605342
 GameObject:
   m_ObjectHideFlags: 0
@@ -1524,7 +1547,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3514043453178040580}
-  m_LocalRotation: {x: 0.11559233, y: 0.000000034182086, z: -0.0000000039778514, w: 0.9932968}
+  m_LocalRotation: {x: 0.11559233, y: -0.000000034182086, z: 0.0000000039778514, w: 0.9932968}
   m_LocalPosition: {x: 0, y: 2, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2708,7 +2731,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5688750273609335841}
-  m_LocalRotation: {x: 0.11559232, y: 0.000000017091043, z: -0.0000000019889255, w: 0.99329674}
+  m_LocalRotation: {x: 0.11559232, y: -0.000000017091043, z: 0.0000000019889255, w: 0.99329674}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

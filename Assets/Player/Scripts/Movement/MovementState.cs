@@ -34,6 +34,10 @@ public abstract class MovementState : MonoBehaviour
     [HideInInspector]
     public bool active;
 
+    //timer
+    private float timeOfEnter = 0;
+    protected float secondsSinceEntered = 0;
+
     //called by a PlayerMovementStateMachine to give this script necessary references and instantiate things (I don't like using Unity's Start() method, bc less control)
     public void Startup(PlayerMovementStateMachine stateMachine, MovementResources moveRes)
     {
@@ -89,6 +93,8 @@ public abstract class MovementState : MonoBehaviour
             if (UseAWSD()) MoveRes.ActivateAWSD(); else MoveRes.DeactivateAWSD();
             //run the on enter code (as specified in child), passing the previous state as an argument (to be used in child)
             OnEnter(previousState);
+            //start timer
+            timeOfEnter = Time.time;
         }
 
     }
@@ -98,6 +104,8 @@ public abstract class MovementState : MonoBehaviour
         //if this state is active...
         if (active)
         {
+            //update timer
+            secondsSinceEntered = Time.time - timeOfEnter;
             //run the while active code (as specified in child)
             WhileActive();
         }
@@ -178,5 +186,6 @@ public abstract class MovementState : MonoBehaviour
         airDashing,
         grappling,
         wallRunning,
+        wallJumping
     }
 }

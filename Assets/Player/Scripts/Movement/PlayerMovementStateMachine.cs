@@ -50,6 +50,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
     [HideInInspector] public AirDash airDash;
     [HideInInspector] public Grapple grapple;
     [HideInInspector] public WallRun wallRun;
+    [HideInInspector] public WallJump wallJump;
 
     void Start()
     {
@@ -74,6 +75,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
         airDash = GetComponent<AirDash>();
         grapple = GetComponent<Grapple>();
         wallRun = GetComponent<WallRun>();
+        wallJump = GetComponent<WallJump>();
 
     }
 
@@ -87,6 +89,7 @@ public class PlayerMovementStateMachine : MonoBehaviour
         airDash.Startup(this, moveRes);
         grapple.Startup(this, moveRes);
         wallRun.Startup(this, moveRes);
+        wallJump.Startup(this, moveRes);
 
     }
 
@@ -106,6 +109,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
         airDash.Reset();
         grapple.Reset();
         wallRun.Reset();
+        wallJump.Reset();
+
     }
 
     /// <summary>
@@ -162,6 +167,8 @@ public class PlayerMovementStateMachine : MonoBehaviour
                 return grapple;
             case MoveState.wallRunning:
                 return wallRun;
+            case MoveState.wallJumping:
+                return wallJump;
             default:
                 Debug.LogError("PlayerMovementStateMachine: MovementState " + state + " has no associated script");
                 return null;    //if the code gets here, a MovementScript-MoveState pair is not added

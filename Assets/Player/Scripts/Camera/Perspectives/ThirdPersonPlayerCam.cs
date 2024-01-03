@@ -1,7 +1,10 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class ThirdPersonPlayerCam : MonoBehaviour
 {
+    private Camera cam;
+
     public CameraStyle currentStyle;
 
     [Header("Cameras")]
@@ -21,6 +24,7 @@ public class ThirdPersonPlayerCam : MonoBehaviour
     private void Start()
     {
         SetCameraStyle(currentStyle);
+        cam = GetComponentInChildren<Camera>();
     }
 
     public void SetCameraStyle(CameraStyle newStyle)
@@ -42,4 +46,5 @@ public class ThirdPersonPlayerCam : MonoBehaviour
         combatCam.SetActive(false);
         topDownCam.SetActive(false);
     }
+
 }
