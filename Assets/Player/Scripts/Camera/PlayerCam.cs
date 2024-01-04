@@ -87,7 +87,7 @@ public class PlayerCam : MonoBehaviour
     {
         bool camActive = firstPersonCam.activeInHierarchy;
         firstPersonCam.SetActive(true);
-        firstPersonCamScript.SetRotation(new Vector3(0,0,tilt), transitionTime);
+        firstPersonCamScript.SetTilt(tilt, transitionTime);
         firstPersonCam.SetActive(camActive);
     }
 }

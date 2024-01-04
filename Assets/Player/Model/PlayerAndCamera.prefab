@@ -1188,7 +1188,7 @@ MonoBehaviour:
   active: 0
   slideKey: 306
   slideScale: 0.6
-  slideImpulse: 30
+  slideImpulse: 25
   slideForce: 2
   slideDrag: 0.02
   minSlideSpeed: 4
