@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class WallJump : MovementState
 {
-    public float maxTime = 0.2f;
-    public float wallJumpUpForce;
-    public float wallJumpSideForce;
+    public float maxTime = 0.3f;
+    public float wallJumpUpForce = 15;
+    public float wallJumpSideForce = 8;
 
 
     public override void OnStartup()

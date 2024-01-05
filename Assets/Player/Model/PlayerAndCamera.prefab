@@ -722,7 +722,7 @@ Transform:
   - {fileID: 1617863896529795970}
   - {fileID: 6345573988016107197}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2233134856954191144
 GameObject:
@@ -1041,6 +1041,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eb3e8208e499a4d1fa0612cbb40527f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useWorldGravity: 0
+  normalGravity: 37
   gravity: 37
 --- !u!114 &2400864287416589528
 MonoBehaviour:
@@ -1075,6 +1077,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08df5f2de4b474e53b3e3d5e3712cd86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerModel: {fileID: 6855557162896128881}
+  playerCam: {fileID: 5280080469168762180}
   orientation: {fileID: 6461943581996083859}
   topOfPlayer: {fileID: 6792573896543303738}
   bottomOfPlayer: {fileID: 4726405537273560541}
@@ -1083,20 +1087,14 @@ MonoBehaviour:
   grounded: 0
   onTooSteepSlope: 0
   steepSlopeAngle: 45
-  wallCheckDistance: 0.7
+  wallCheckDistance: 0.2
   wallLeft: 0
   wallRight: 0
-  groundLayer:
+  terrainLayer:
     serializedVersion: 2
     m_Bits: 1024
-  wallLayer:
-    serializedVersion: 2
-    m_Bits: 1024
-  text: {fileID: 0}
   movementInputDirection: {x: 0, y: 0, z: 0}
-  playerModel: {fileID: 6855557162896128881}
   facingDirection: {x: 0, y: 0, z: 0}
-  playerCam: {fileID: 5280080469168762180}
 --- !u!114 &2327904064021446493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1122,9 +1120,12 @@ MonoBehaviour:
   airDrag: 0.001
   dragType: 0
   feet: {fileID: 5609457585799653179}
-  groundingForce: 200
+  flatGroundingForce: 10
+  maxGroundingForce: 200
   tooSteepSlopeForce: 100
   steepSlopeUpwardYDragMultiplier: 0.45
+  savedValues: []
+  savedDragType: 0
 --- !u!114 &3517471366838291065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1209,7 +1210,6 @@ MonoBehaviour:
   airDashImpulse: 50
   airDashForce: 0
   airDashDrag: 0.001
-  minAirDashSpeed: 0.01
   maxTime: 0.6
 --- !u!114 &3752754612675546475
 MonoBehaviour:
@@ -1265,9 +1265,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myState: 0
   active: 0
-  maxTime: 0.2
-  wallJumpUpForce: 7
-  wallJumpSideForce: 5
+  maxTime: 0.3
+  wallJumpUpForce: 15
+  wallJumpSideForce: 8
 --- !u!1 &2940417909565605342
 GameObject:
   m_ObjectHideFlags: 0
@@ -1547,7 +1547,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3514043453178040580}
-  m_LocalRotation: {x: 0.11559233, y: -0.000000034182086, z: 0.0000000039778514, w: 0.9932968}
+  m_LocalRotation: {x: 0.11559233, y: 0.000000034182086, z: -0.0000000039778514, w: 0.9932968}
   m_LocalPosition: {x: 0, y: 2, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2731,7 +2731,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5688750273609335841}
-  m_LocalRotation: {x: 0.11559232, y: -0.000000017091043, z: 0.0000000019889255, w: 0.99329674}
+  m_LocalRotation: {x: 0.11559232, y: 0.000000017091043, z: -0.0000000019889255, w: 0.99329674}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3586,7 +3586,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6537075260124349923}
-  m_LocalRotation: {x: 0.09252101, y: 0.000000017659856, z: -0.0000000016409462, w: 0.99571073}
+  m_LocalRotation: {x: 0.09252101, y: -0.000000017659858, z: 0.0000000016409464, w: 0.99571073}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4419,6 +4419,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objToTrack: {fileID: 6175467539904385457}
+  offset: {x: 0, y: 0, z: 0}
 --- !u!114 &4495470203443840196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4433,7 +4434,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   orientation: {fileID: 6461943581996083859}
   playerModel: {fileID: 2849666892977613574}
-  playerHead: {fileID: 0}
   xSensitivity: 4
   ySensitivity: 4
   normalFOV: 80

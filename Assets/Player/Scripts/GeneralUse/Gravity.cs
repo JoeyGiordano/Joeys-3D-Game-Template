@@ -1,16 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Applies gravity using rigidbody forces.
+/// </summary>
 public class Gravity : MonoBehaviour
 {
     //References
     Rigidbody rb;
 
-    //static worldGravity variable?
+    [Header("World Gravity")]
+    public static float worldGravity = 30; //the same number for all objects
+    public bool useWorldGravity = false;
 
-    //Values
-    private float normalGravity = 37;
+    [Header("Settings")]
+    public float normalGravity = 37;
     public float gravity = 37;
 
     private void Start()
@@ -25,7 +28,8 @@ public class Gravity : MonoBehaviour
 
     private void ApplyGravity()
     {
-        rb.AddForce(gravity * Vector3.down, ForceMode.Force);
+        if (useWorldGravity) rb.AddForce(worldGravity * Vector3.down, ForceMode.Force);
+        else rb.AddForce(gravity * Vector3.down, ForceMode.Force);
     }
 
     public void SetGravity(float gravity)

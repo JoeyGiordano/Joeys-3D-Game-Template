@@ -1,16 +1,29 @@
 using UnityEngine;
 using static ThirdPersonPlayerCam;
 
+/// <summary>
+/// Manages all player cameras through the first and third person camera scripts.
+/// To add more third person camera styles see the ThirdPersonPlayerCam script.
+/// You can turn player camera off by deactivating the PlayerCam object (no additional method calls needed)
+/// If adding non-player cameras
+///  - do not use the third person cam cinemachine brain to manage external virtual cameras (either make one outside and delete the one inside or make two and have one activated at a time)
+///  - move the Cursor settings lines to your camera manager script
+///  - you may have to add scripts to make sure the player orientation responds to input
+/// The input based camera switching in Update() is just for testing, feel free to delete it.
+/// </summary>
 public class PlayerCam : MonoBehaviour
 {
+    [Header("Camera Objects")]
     GameObject firstPersonCam;
     GameObject thirdPersonCam;
 
+    [Header("Camera Scripts")]
     [HideInInspector]
     public FirstPersonPlayerCam firstPersonCamScript;
     [HideInInspector]
     public ThirdPersonPlayerCam thirdPersonCamScript;
 
+    [Header("Active Camera")]
     [SerializeField]
     private bool startFirstPerson;
     [HideInInspector]
@@ -18,7 +31,7 @@ public class PlayerCam : MonoBehaviour
 
     private void Start()
     {
-        //make the mouse invisible
+        //make the mouse invisible, if adding more camera stuff move these two lines to your camera manager script 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -35,7 +48,7 @@ public class PlayerCam : MonoBehaviour
 
     void Update()
     {
-        //input camera switch
+        //input camera switch, just for testing
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             CutToFirstPersonCam();
@@ -58,7 +71,7 @@ public class PlayerCam : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha5))
         {
             CutToThirdPersonCam();
-            thirdPersonCamScript.SetCameraStyle(CameraStyle.Topdown);
+            thirdPersonCamScript.SetCameraStyle(CameraStyle.TopDown);
         }
     }
 

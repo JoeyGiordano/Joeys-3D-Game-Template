@@ -1,22 +1,25 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Positions and orients the First Person Camera. Based on the linked youtube video
+/// https://www.youtube.com/watch?v=f473C43s8nE&ab_channel=Dave%2FGameDevelopment
+/// Some things are different though so be careful. (also note the organization in the hirearchy)
+/// </summary>
 public class FirstPersonPlayerCam : MonoBehaviour
 {
-    private GameObject camObj;
-    private Camera cam;
-
     [Header("References")]
     public Transform orientation;
     public Transform playerModel;
-    public Transform playerHead;
+    private GameObject camObj;
+    private Camera cam;
 
     [Header("Cam Settings")]
     public float xSensitivity;
     public float ySensitivity;
-    [SerializeField]
     public float normalFOV = 80f;
 
+    //camera orientation direction storage
     float xRotation;
     float yRotation;
 
@@ -43,16 +46,24 @@ public class FirstPersonPlayerCam : MonoBehaviour
         playerModel.rotation = Quaternion.Euler(0, yRotation, 0);
     }
 
+    //the following methods could be done using DOTween library (like in video), but I used lerp so you don't have to download DOTween
+    //if you're going to add more camera effects, use Cinemachine or DOTween (Cinemachine is probably better, but up to you)
     public void SetFOV(float fov)
     {
         cam.fieldOfView = fov;
     }
     public void SetFOV(float fov, float transitionTime)
     {
+        if (transitionTime == 0) { SetFOV(fov); return; }
         StartCoroutine(LerpFOV(fov, transitionTime));
+    }
+    public void SetTilt(float tilt)
+    {
+        camObj.transform.localRotation = Quaternion.Euler(0, 0, tilt);
     }
     public void SetTilt(float tilt, float transitionTime)
     {
+        if (transitionTime == 0) { SetFOV(tilt); return; }
         StartCoroutine(LerpTilt(tilt, transitionTime));
     }
 

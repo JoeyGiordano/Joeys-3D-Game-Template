@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Locks the camera to the vertical plane containing the player's view direction
-/// by rotating the playerModel and orientation so that the player's view, orientation, and camera view are pointed in the same direction
+/// by rotating the playerModel and orientation so that the orientation and camera view are pointed in the same XZ direction
 /// ie must stop and turn around to look behind yourself
 /// </summary>
 public class PlayerCamLockedBehind : MonoBehaviour

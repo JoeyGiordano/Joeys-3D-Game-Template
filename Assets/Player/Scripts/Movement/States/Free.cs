@@ -1,16 +1,21 @@
 using UnityEngine;
 
+/// <summary>
+/// The simplest movement state child. Does nothing excepts allows AWSD movement.
+/// Has no enter condition because this state never override another state
+/// Has no exit condition because this state can only end by being overriden
+///
+/// //Note to people that are copying this to make a new movement state:
+/// Several useful references are stored in the parent
+///  - player gameObject (Player)
+///  - player RigidBody (rb)
+///  - MovementResources (MoveRes) has many useful flags and resource methods
+///  - PlayerMovementStateMachine (stateMachine) has current state (state) and isInState()
+///  - secondsSinceEntered, the time since the state was entered
+/// 
+/// </summary>
 public class Free : MovementState
 {
-    //Note to people that are copying this to make a new movement state:
-    //Several useful references are stored in the parent
-    // - player gameObject (Player)
-    // - player RigidBody (rb)
-    // - MovementResources (MoveRes) has many useful flags and resource methods
-    // - PlayerMovementStateMachine (stateMachine) has current state (state) and isInState()
-    // - secondsSinceEntered, the time since the state was entered
-
-
     public override void OnStartup()
     {
         //do nothing

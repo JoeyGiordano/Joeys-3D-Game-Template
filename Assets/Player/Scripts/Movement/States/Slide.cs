@@ -4,10 +4,10 @@ public class Slide : MovementState
 {
     public KeyCode slideKey = KeyCode.LeftControl;
     public float slideScale = 0.6f;
-    public float slideImpulse = 10;
-    public float slideForce = 10;
-    public float slideDrag = 0.1f;
-    public float minSlideSpeed = 0.1f;
+    public float slideImpulse = 25;
+    public float slideForce = 2;
+    public float slideDrag = 0.02f;
+    public float minSlideSpeed = 4;
 
     private Vector3 slideDirection;
 

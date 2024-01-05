@@ -3,11 +3,10 @@ using UnityEngine;
 public class AirDash : MovementState
 {
     int mouseButtonCode = 1;
-    public float airDashImpulse = 30f;
-    public float airDashForce = 5f;
-    public float airDashDrag = 0.03f;
-    public float minAirDashSpeed = 5;
-    public float maxTime = 1.2f;
+    public float airDashImpulse = 50f;
+    public float airDashForce = 0f;
+    public float airDashDrag = 0.001f;
+    public float maxTime = 0.6f;
 
     Vector3 airDashDirection;
 
@@ -47,7 +46,7 @@ public class AirDash : MovementState
 
     public override bool ExitCondition()
     {
-        if (MoveRes.XZvelocity().magnitude < minAirDashSpeed || MoveRes.grounded || secondsSinceEntered > maxTime)
+        if (MoveRes.grounded || secondsSinceEntered > maxTime)
             return true;
         return false;
     }

@@ -9,7 +9,7 @@ public class Grapple : MovementState
     [Range(0, 1)]
     public float pullDuringSwing = 0.1f;
     public float extraFallingForce = 10;
-    public float releaseForce = 4;
+    public float releaseForce = 6;
     
     [Header("References")]
     public GameObject grappleGun;
@@ -38,7 +38,7 @@ public class Grapple : MovementState
         {
             RaycastHit hit;
             //if a raycast in the camera's facing direction hits a close enough grabbleable surface
-            if (Physics.Raycast(MoveRes.eyes.position, MoveRes.facingDirection, out hit, grappleRange, MoveRes.groundLayer))
+            if (Physics.Raycast(MoveRes.eyes.position, MoveRes.facingDirection, out hit, grappleRange, MoveRes.terrainLayer))
             {
                 swingPoint = hit.point;
                 return true;

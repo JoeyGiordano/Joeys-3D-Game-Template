@@ -1,51 +1,53 @@
-using TMPro;
 using UnityEngine;
 
 /// <summary>
 /// 
 /// this class...
-///  - stores and updates variables that describe the play (eg grounded)
-///  - provides methods that can be called from MovementState children to apply certain movements to the player
+///  - stores references to useful components, scripts, and transforms
+///  - stores and updates the values of useful flags (eg grounded, leftWall)
+///  - provides MANY useful resource methods
+///
+/// If you are adding movement states and need somewhere to put resources, add more of the above things to this script
+///
+/// Unrelated note: scaling the player can mess some things up but I tried to make as few things break as possible. Make sure the colliders are all in the right places (feet!).
 /// 
 /// </summary>
 public class MovementResources : MonoBehaviour
 {
-    //references
+    [Header("References")]
+    public GameObject playerModel;
+    public PlayerCam playerCam;
     Rigidbody rb;
     CapsuleCollider coll;
     Gravity grav;
     AWSDMovement awsd;
 
     [Header("Locations")]
-    public Transform orientation;
+    public Transform orientation;       //facing of the player (when cameras are set up correctly)
     public Transform topOfPlayer;
     public Transform bottomOfPlayer;
     public Transform centerOfPlayer;
-    public Transform eyes;
+    public Transform eyes;              //where the 1st person camera is/would be on the player object
 
     [Header("Grounding")]
     public bool grounded = false;       //true when the spherecast hits the ground, and the slope is less than maxSlopeAngleConsideredGround 
     public bool onTooSteepSlope = false;   //true when the spherecast hits the ground, but the slope is more than maxSlopeAngleConsideredGround
-    public float steepSlopeAngle = 45;
+    public float steepSlopeAngle = 45f;    //what steepness of slope is not considered grounded (used in AWSDMovement as the max climbing steepness)
     public RaycastHit groundHit;    //what the grounding raycast is hitting, only meaningful when grounded
 
     [Header("Wall Detection")]
-    public float wallCheckDistance;
-    public RaycastHit leftWallHit;
-    public RaycastHit rightWallHit;
-    public bool wallLeft;
-    public bool wallRight;
+    public float wallCheckDistance = 0.2f;      //distance beyond the collider to check the 
+    public RaycastHit leftWallHit;              //the most recent leftward raycast that hit a wall this update
+    public RaycastHit rightWallHit;             //the most recent rightward raycast that hit a wall this update
+    public bool wallLeft = false;               //true when one of the leftward raycasts hits a wall
+    public bool wallRight = false;              //true when one of the rightward raycasts hits a wall
 
     [Header("Layer Masks")]
-    public LayerMask groundLayer;
-    public LayerMask wallLayer;
+    public LayerMask terrainLayer;
 
-    [Header("Other")]
-    public TextMeshProUGUI text;
-    [HideInInspector] public Vector3 movementInputDirection;     //used by cameras, the current direction of the player movement input, set by AWSDMovement in fixed update, can be set by other movementstate scripts (normalize!), used by cameras
-    public GameObject playerModel;
-    [HideInInspector] public Vector3 facingDirection;
-    public PlayerCam playerCam;
+    [Header("Directions")]
+    [HideInInspector] public Vector3 movementInputDirection;     //used by cameras, the current direction of the player movement input, set by AWSDMovement in fixed update, can be set by other movementstate scripts (normalize!)
+    [HideInInspector] public Vector3 facingDirection;       //direction the active camera is facing
 
     void Start()
     {
@@ -60,7 +62,6 @@ public class MovementResources : MonoBehaviour
         GroundCheck();
         WallCheck();
         GetFacingDirection();
-        UI();
     }
 
     private void FixedUpdate()
@@ -69,17 +70,13 @@ public class MovementResources : MonoBehaviour
         KillVelocityBelow(0.001f);
     }
 
-    private void UI()
-    {
-        text.text = ((int)(rb.velocity.magnitude*1000)/1000).ToString();
-    }
-
+    //Ground Check
     private void GroundCheck()
     {
         //stores the resulting RaycastHit in groundHit
         Vector3 castFrom = bottomOfPlayer.position + new Vector3(0,coll.radius,0);
         //grounded is true if Spherecast hits
-        grounded = Physics.SphereCast(castFrom, 0.98f * coll.radius, Vector3.down, out groundHit, 0.1f, groundLayer);
+        grounded = Physics.SphereCast(castFrom, 0.98f * coll.radius, Vector3.down, out groundHit, 0.1f, terrainLayer);
         //if the slope is too steep
         if (grounded && GroundAngleDeg() > steepSlopeAngle)
         {
@@ -90,6 +87,7 @@ public class MovementResources : MonoBehaviour
         } else onTooSteepSlope = false;
     }
 
+    //Facing Direction - uses the direction of the active camera
     private void GetFacingDirection()
     {
         facingDirection = Camera.main.gameObject.transform.forward;
@@ -101,7 +99,7 @@ public class MovementResources : MonoBehaviour
         return grav;
     }
 
-    //Scale
+    //Scale - more complex than you would think because of the colliders etc
     public void ScalePlayerAndModelXYZ(float scaleMultiplier)
     {
         if (scaleMultiplier <= 0) { Debug.Log("Illegal scale multiplier"); return; }
@@ -159,7 +157,7 @@ public class MovementResources : MonoBehaviour
         return awsd;
     }
 
-    //Get velocity components
+    //Velocity Components
     public Vector3 XZvelocity()
     {
         return new Vector3(rb.velocity.x, 0, rb.velocity.z);
@@ -169,7 +167,7 @@ public class MovementResources : MonoBehaviour
         return new Vector3(0, rb.velocity.y, 0);
     }
 
-    //Kill Velocity
+    //Kill Velocity - if the velocity is below min speed, set velocity to 0
     public void KillVelocityBelow(float minSpeed)
     {
         if (rb.velocity.magnitude < minSpeed)
@@ -186,7 +184,7 @@ public class MovementResources : MonoBehaviour
             rb.velocity = XZvelocity();
     }
 
-    //Cap Velocity
+    //Cap Velocity - if velocity is above maxSpeed, reduces velocity to maxSpeed
     public void CapVelocity(float maxSpeed)
     {
         if (rb.velocity.magnitude > maxSpeed)
@@ -204,7 +202,7 @@ public class MovementResources : MonoBehaviour
             rb.velocity = XZvelocity() + maxSpeed * Vector3.up;
     }
 
-    //Drag
+    //Drag - applies direct drag directly to velocity (either linear for ground, or square for air)
     public void ApplyXZGroundDrag(float drag)
     {
         rb.velocity -= drag * XZvelocity();
@@ -236,12 +234,12 @@ public class MovementResources : MonoBehaviour
             rb.AddForce(force * Vector3.down, ForceMode.Force);
     }
 
-    //Ground Results
+    //Ground Results - results from grounding raycast
     public Vector3 ProjectOnGroundHit(Vector3 v)
     {
         return Vector3.ProjectOnPlane(v, groundHit.normal);
     }
-    public Vector3 ProjectOnFlat(Vector3 v)
+    public Vector3 ProjectOnXZ(Vector3 v)
     {
         return Vector3.ProjectOnPlane(v, Vector3.up);
     }
@@ -262,7 +260,7 @@ public class MovementResources : MonoBehaviour
         return groundHit.collider.gameObject;
     }
 
-    //wall check
+    //Wall Cast - wall raycast and results
     private void WallCheck()
     {
         wallRight = false;
@@ -276,7 +274,7 @@ public class MovementResources : MonoBehaviour
         for (int i = 0; i < RaysToShoot; i++)
         {
             var dir = Quaternion.Euler(0, offset + i * delta, 0) * orientation.forward;
-            bool leftCast = Physics.Raycast(transform.position, -dir, out leftWallHit, wallCheckDistance, wallLayer);
+            bool leftCast = Physics.Raycast(transform.position, -dir, out leftWallHit, coll.radius + wallCheckDistance, terrainLayer);
             if (leftCast)
             {
                 wallLeft = true;
@@ -286,7 +284,7 @@ public class MovementResources : MonoBehaviour
         for (int i = 0; i < RaysToShoot; i++)
         {
             var dir = Quaternion.Euler(0, offset + i * delta, 0) * orientation.forward;
-            bool rightCast = Physics.Raycast(transform.position, dir, out rightWallHit, wallCheckDistance, wallLayer);
+            bool rightCast = Physics.Raycast(transform.position, dir, out rightWallHit, coll.radius + wallCheckDistance, terrainLayer);
             if (rightCast)
             {
                 wallRight = true;

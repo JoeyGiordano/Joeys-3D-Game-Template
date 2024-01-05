@@ -3,18 +3,18 @@ using UnityEngine;
 public class WallRun : MovementState
 {
     [Header("Wallrunning")]
-    public float wallRunForce;
-    public float wallRunGravity;
-    public float wallRunHorDrag;
-    public float wallRunVertDrag;
-    public float maxTime;
+    public float wallRunForce = 7;
+    public float wallRunGravity = 3;
+    public float wallRunHorDrag = 0.3f;
+    public float wallRunVertDrag = 0.05f;
+    public float maxTime = 1.5f;
 
     //input
     private float horizontalInput;
     private float verticalInput;
 
     [Header("Detection")]
-    public float minHeightAboveGround;
+    public float minHeightAboveGround = 0.2f;
 
     public override void OnStartup()
     {
@@ -79,14 +79,14 @@ public class WallRun : MovementState
     public override MoveState OnExit()
     {
         MoveRes.getGravity().ResetGravity();
-        MoveRes.playerCam.SetFirstPersonTilt(0, 0.25f);
+        MoveRes.playerCam.SetFirstPersonTilt(0, 0.5f);
         return MoveState.free;
     }
 
     public override void OnOverriden()
     {
         MoveRes.getGravity().ResetGravity();
-        MoveRes.playerCam.SetFirstPersonTilt(0, 0.25f);
+        MoveRes.playerCam.SetFirstPersonTilt(0, 0.5f);
     }
 
     public override void OnReset()
@@ -110,7 +110,7 @@ public class WallRun : MovementState
 
     private bool AboveGround()
     {
-        return !Physics.Raycast(MoveRes.bottomOfPlayer.position, Vector3.down, minHeightAboveGround, MoveRes.groundLayer);
+        return !Physics.Raycast(MoveRes.bottomOfPlayer.position, Vector3.down, minHeightAboveGround, MoveRes.terrainLayer);
     }
 
 }

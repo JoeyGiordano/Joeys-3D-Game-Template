@@ -3,11 +3,16 @@ using UnityEngine;
 /// <summary>
 ///
 /// ***README***
+/// This class makes creating a new movement state a fill-in-the-blank process
+/// When you make a new movement state you extend this class which requires you to implement (fill in) the abstract methods (the blanks).
+/// The abstract methods are then called here in update and fixed update making you implementation work without you having to do anything. 
+///
 /// This class...
 ///  - contains all of the abstract methods that movement state scripts need to inherit
-///  - calls those methods in Update() in a specific order so all you have to do is fill in the inherited methods in the child class
+///  - calls those methods in Update() and FixedUpdate() in a specific order so all you have to do is fill in the inherited methods in the child class
 ///  - has the methods Startup() and Reset() for PlayerMovementStateMachine to call when initiating/resetting the state machine
 ///  - has the MoveState enum which enumerates all possible movement states
+///  - records the duration that the state has been active for
 ///  - is HEAVILY commented so that you can read it and easily figure out exactly whats going on
 ///  - is HEAVILY commneted so that you can read it and easily know what to put in the inherited methods
 ///
