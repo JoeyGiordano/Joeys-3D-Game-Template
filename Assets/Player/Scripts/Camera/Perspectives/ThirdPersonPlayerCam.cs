@@ -1,9 +1,8 @@
-using DG.Tweening;
 using UnityEngine;
 
 public class ThirdPersonPlayerCam : MonoBehaviour
 {
-    private Camera cam;
+    Camera cam;
 
     public CameraStyle currentStyle;
 

@@ -1,0 +1,15 @@
+{
+  "name": "com.joeyg.jg-player-controller",
+  "version": "1.0.0",
+  "displayName": "JG Player Controller",
+  "description": "",
+  "unity": "2022.3",
+  "dependencies": {
+  },
+  "keywords": [ "player controller", "player", "joeyg" ],
+  "author": {
+    "name": "Joey G",
+    "email": "",
+    "url": ""
+  }
+}
